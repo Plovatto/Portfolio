@@ -2,7 +2,12 @@ import { useEffect, useRef } from 'react'
 import { useTheme } from '../../hooks/useTheme'
 import { CircuitEngine } from './circuitEngine'
 
-export function CircuitBackground() {
+interface CircuitBackgroundProps {
+  label?: string
+  active?: boolean
+}
+
+export function CircuitBackground({ label = '', active = true }: CircuitBackgroundProps) {
   const { theme } = useTheme()
   const themeRef = useRef(theme)
   const canvasRef = useRef<HTMLCanvasElement>(null)
@@ -13,13 +18,13 @@ export function CircuitBackground() {
 
   useEffect(() => {
     const canvas = canvasRef.current
-    if (!canvas || !canvas.getContext('2d')) return
+    if (!active || !canvas || !canvas.getContext('2d')) return
 
-    const engine = new CircuitEngine(canvas, () => themeRef.current)
+    const engine = new CircuitEngine(canvas, () => themeRef.current, label)
     engine.start()
 
     return () => engine.stop()
-  }, [])
+  }, [label, active])
 
   return (
     <canvas
