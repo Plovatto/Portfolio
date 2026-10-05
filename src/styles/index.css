@@ -299,6 +299,81 @@ main {
   }
 }
 
+.reveal .rv {
+  opacity: 0;
+  transform: translateY(14px);
+  transition:
+    opacity 500ms var(--ease-out),
+    transform 500ms var(--ease-out);
+  transition-delay: calc(var(--i, 0) * 60ms);
+}
+
+.reveal .rv-fade {
+  opacity: 0;
+  transition: opacity 600ms var(--ease-out);
+  transition-delay: calc(var(--i, 0) * 60ms);
+}
+
+.reveal .rv-clip {
+  clip-path: inset(0 0 100% 0);
+  transform: translateY(0.25em);
+  transition:
+    clip-path 650ms var(--ease-in-out),
+    transform 650ms var(--ease-out);
+  transition-delay: calc(var(--i, 0) * 60ms);
+}
+
+.reveal .rv-scan {
+  clip-path: inset(0 100% 0 0);
+  transition: clip-path 800ms var(--ease-in-out);
+  transition-delay: calc(var(--i, 0) * 60ms);
+}
+
+.reveal .in.rv,
+.reveal .in .rv {
+  opacity: 1;
+  transform: none;
+}
+
+.reveal .in.rv-fade,
+.reveal .in .rv-fade {
+  opacity: 1;
+}
+
+.reveal .in.rv-clip,
+.reveal .in .rv-clip {
+  clip-path: inset(0 0 -0.3em 0);
+  transform: none;
+}
+
+.reveal .in.rv-scan,
+.reveal .in .rv-scan {
+  clip-path: inset(0 0 0 0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal .rv,
+  .reveal .rv-clip,
+  .reveal .rv-scan {
+    transform: none;
+    clip-path: none;
+    transition: opacity 200ms ease;
+    transition-delay: 0ms;
+  }
+
+  .reveal .rv-clip,
+  .reveal .rv-scan {
+    opacity: 0;
+  }
+
+  .reveal .in.rv-clip,
+  .reveal .in .rv-clip,
+  .reveal .in.rv-scan,
+  .reveal .in .rv-scan {
+    opacity: 1;
+  }
+}
+
 ::selection {
   background: color-mix(in oklab, var(--accent) 32%, transparent);
   color: var(--text);
