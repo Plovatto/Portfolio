@@ -153,6 +153,49 @@ main {
   padding-block: clamp(4.5rem, 12vh, 6.5rem);
 }
 
+.section-divider {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  height: 1.5rem;
+  margin-block: -0.75rem;
+  pointer-events: none;
+}
+
+.section-divider-score {
+  flex: 1;
+  height: 1px;
+  background: repeating-linear-gradient(
+    90deg,
+    color-mix(in oklab, var(--violet) 35%, var(--border-strong)) 0 6px,
+    transparent 6px 11px
+  );
+}
+
+.section-divider-score:first-child {
+  transform: scaleX(-1);
+}
+
+.section-divider-tab {
+  display: flex;
+  gap: 0.45rem;
+}
+
+.section-divider-tab i {
+  width: 6px;
+  height: 6px;
+  border: 1px solid color-mix(in oklab, var(--violet) 55%, var(--border-strong));
+  border-radius: 50%;
+  background: var(--bg);
+}
+
+@media (max-width: 900px) {
+  .section-divider:has(+ .stack) {
+    margin-bottom: 1rem;
+  }
+}
+
 .section-head {
   display: flex;
   flex-direction: column;
