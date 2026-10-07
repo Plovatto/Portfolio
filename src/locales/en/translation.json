@@ -5,8 +5,10 @@
   },
   "nav": {
     "label": "Navigation",
+    "sections": "Sections",
     "home": "Home",
     "toggleTheme": "toggle theme",
+    "unsaved": "Unsaved changes",
     "files": {
       "home": "home.tsx",
       "projects": "projects.tsx",
@@ -18,6 +20,7 @@
       "experience": "git log"
     },
     "themeToLight": "Switch to light theme",
-    "themeToDark": "Switch to dark theme"
+    "themeToDark": "Switch to dark theme",
+    "language": "Language"
   }
 }
