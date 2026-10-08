@@ -21,7 +21,8 @@
     },
     "themeToLight": "Mudar para o tema claro",
     "themeToDark": "Mudar para o tema escuro",
-    "language": "Idioma"
+    "language": "Idioma",
+    "skip": "Pular para o conteúdo"
   },
   "statusBar": {
     "label": "Barra de status",

@@ -21,7 +21,8 @@
     },
     "themeToLight": "Switch to light theme",
     "themeToDark": "Switch to dark theme",
-    "language": "Language"
+    "language": "Language",
+    "skip": "Skip to content"
   },
   "statusBar": {
     "label": "Status bar",

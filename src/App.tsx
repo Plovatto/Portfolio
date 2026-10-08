@@ -13,6 +13,9 @@ function App() {
 
   return (
     <>
+      <a className="skip-link" href="#main">
+        {t('nav.skip')}
+      </a>
       <CircuitBackground />
       <ActivityBar active={active} />
       <EditorTabs active={active} messageSent={false} />
