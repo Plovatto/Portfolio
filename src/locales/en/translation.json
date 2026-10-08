@@ -22,5 +22,12 @@
     "themeToLight": "Switch to light theme",
     "themeToDark": "Switch to dark theme",
     "language": "Language"
+  },
+  "statusBar": {
+    "label": "Status bar",
+    "build": "✓ build passing"
+  },
+  "footer": {
+    "copyright": "© {{year}} Pandora Becker Lovatto"
   }
 }
