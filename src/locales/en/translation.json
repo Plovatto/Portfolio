@@ -26,7 +26,73 @@
   },
   "statusBar": {
     "label": "Status bar",
-    "build": "✓ build passing"
+    "build": "✓ build passing",
+    "writing": "⟳ writing {{file}}",
+    "compiling": "⟳ compiling",
+    "ready": "✓ ready in {{ms}} ms"
+  },
+  "hero": {
+    "role": "Full stack developer",
+    "lede": "I build and evolve real web systems, from the interface to the database, focused on practical solutions and well-crafted delivery.",
+    "viewProjects": "View projects",
+    "getInTouch": "Get in touch",
+    "codeFile": "src/home.tsx",
+    "closeCode": "close code",
+    "codeComponent": "Home"
+  },
+  "terminal": {
+    "title": "terminal",
+    "badge": "System in production",
+    "prompt": "visitor@portfolio:~$",
+    "commands": {
+      "whoami": "whoami",
+      "skills": "skills --list",
+      "projects": "projects",
+      "git": "git log",
+      "contact": "contact"
+    },
+    "typed": {
+      "git": "git log --oneline"
+    },
+    "boot": {
+      "ready": "ready in {{ms}} ms",
+      "board": "board",
+      "boardValue": "powered",
+      "name": "name",
+      "nameValue": "energized"
+    },
+    "whoami": {
+      "name": "name",
+      "role": "role",
+      "stack": "stack",
+      "location": "location",
+      "locationValue": "Brazil"
+    },
+    "skills": {
+      "interface": "interface",
+      "server": "server",
+      "data": "data",
+      "infra": "infra"
+    },
+    "projects": {
+      "sparkchat": "real-time chat with E2E",
+      "petland": "animated landing page, PT and EN",
+      "opening": "opening projects.tsx..."
+    },
+    "contact": {
+      "channels": "channels",
+      "channelsValue": "form, e-mail, LinkedIn",
+      "reply": "reply",
+      "replyValue": "within 1 business day",
+      "opening": "opening contact.tsx..."
+    },
+    "git": {
+      "fullStack": "full stack contractor, CONSEPRO",
+      "english": "English, KNN",
+      "internship": "internship, CONSEPRO Project",
+      "degree": "Information Systems, FACCAT",
+      "technical": "IT technician, CIMOL"
+    }
   },
   "footer": {
     "copyright": "© {{year}} Pandora Becker Lovatto"
