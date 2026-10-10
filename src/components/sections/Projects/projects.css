@@ -343,3 +343,62 @@
     animation: none;
   }
 }
+
+.reveal .project .tag {
+  opacity: 0;
+  transform: translateY(6px) scale(0.96);
+  transition:
+    opacity 320ms var(--ease-out),
+    transform 380ms var(--ease-out);
+  transition-delay: calc(var(--i, 0) * 60ms + var(--t, 0) * 40ms);
+}
+
+.reveal .project.in .tag {
+  opacity: 1;
+  transform: none;
+}
+
+.reveal .xray::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  background: linear-gradient(
+    90deg,
+    transparent calc(100% - 70px),
+    color-mix(in oklab, var(--accent) 16%, transparent) calc(100% - 3px),
+    var(--accent) calc(100% - 2px),
+    transparent
+  );
+  opacity: 0;
+  transform: translateX(-100%);
+  pointer-events: none;
+}
+
+.reveal .in .xray::after {
+  animation: xray-sweep 800ms var(--ease-in-out) calc(var(--i, 0) * 60ms);
+}
+
+@keyframes xray-sweep {
+  from {
+    opacity: 1;
+    transform: translateX(-100%);
+  }
+  90% {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+    transform: translateX(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal .project .tag {
+    transform: none;
+  }
+
+  .reveal .in .xray::after {
+    animation: none;
+  }
+}
