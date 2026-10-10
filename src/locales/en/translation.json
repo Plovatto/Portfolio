@@ -94,6 +94,61 @@
       "technical": "IT technician, CIMOL"
     }
   },
+  "projects": {
+    "title": "Projects",
+    "lede": "Hover the images: the lens shows the schematic behind each product.",
+    "live": "live",
+    "building": "in progress",
+    "xrayHint": "X-ray lens: the product's schematic",
+    "client": "Client",
+    "server": "Server",
+    "sparkchat": {
+      "description": "Real-time chat that only the people talking can read: messages and files are encrypted right in the browser. It has rooms, groups, audio, link previews and an AI assistant.",
+      "imageAlt": "SparkChat on a desktop screen",
+      "links": {
+        "app": "Open the app",
+        "client": "Client code",
+        "api": "API code"
+      },
+      "schematic": {
+        "client": "Client",
+        "clientDetail": "React + E2E",
+        "socket": "Socket",
+        "socketDetail": "real time",
+        "api": "API",
+        "apiDetail": "Express + Zod",
+        "database": "Turso",
+        "databaseDetail": "database",
+        "files": "R2",
+        "filesDetail": "files",
+        "note": ["E2E: the key never", "leaves the browser"]
+      }
+    },
+    "petland": {
+      "description": "Landing page for a fictional pet shop, built to explore animation, smooth scrolling, a carousel and a two-language site, with a working contact form and automatic deploys.",
+      "imageAlt": "Top of the PetLand landing page",
+      "links": {
+        "site": "Open the site",
+        "code": "View the code"
+      },
+      "schematic": {
+        "sections": "Sections",
+        "sectionsDetail": "hero, services",
+        "motion": "Motion",
+        "motionDetail": "Lenis + Swiper",
+        "contact": "Contact",
+        "contactDetail": "EmailJS",
+        "i18n": "i18n",
+        "i18nDetail": "PT and EN",
+        "note": ["Automatic deploys", "on GitHub Pages"]
+      }
+    },
+    "next": {
+      "title": "Next project",
+      "description": "This spot on the board is already reserved for what comes next."
+    },
+    "xrayHintTouch": "Tap the image to see the schematic"
+  },
   "footer": {
     "copyright": "© {{year}} Pandora Becker Lovatto"
   }

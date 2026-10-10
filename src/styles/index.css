@@ -356,6 +356,37 @@ main {
   }
 }
 
+.tag {
+  padding: 0.25rem 0.625rem;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--tag);
+  color: var(--muted);
+  font-size: 0.8125rem;
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.live {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: var(--muted);
+  font: 500 0.75rem var(--f-mono);
+}
+
+.live i {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--led);
+  box-shadow: 0 0 6px var(--led);
+}
+
 .reveal .rv {
   opacity: 0;
   transform: translateY(14px);

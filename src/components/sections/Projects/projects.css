@@ -1,0 +1,345 @@
+.projects {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.5rem;
+}
+
+.project {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  overflow: hidden;
+  padding: 2rem;
+}
+
+.project h3 {
+  font-size: 1.5rem;
+}
+
+.project p {
+  color: var(--muted);
+  font-size: 0.98rem;
+  line-height: 1.6;
+}
+
+.project-wide {
+  display: grid;
+  grid-column: 1 / -1;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  align-items: center;
+  gap: 2rem;
+}
+
+.project-wide.is-flipped {
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+}
+
+.project-body {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.project-media {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.project-top {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.project-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.9rem;
+  margin-top: auto;
+  font-size: 0.875rem;
+}
+
+.project-links a {
+  text-decoration: underline;
+  text-decoration-color: var(--border-strong);
+  text-underline-offset: 0.3em;
+  transition:
+    color 0.15s ease,
+    text-decoration-color 0.15s ease;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .project-links a:hover {
+    color: var(--text);
+    text-decoration-color: var(--accent);
+  }
+}
+
+.project-halves {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.project-half {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  padding: 0.9rem;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--tag);
+}
+
+.project-half b {
+  font: 500 0.8rem var(--f-mono);
+}
+
+.project-slot {
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 2rem;
+  background:
+    linear-gradient(180deg, var(--surface-top), var(--surface-bottom)) padding-box,
+    repeating-linear-gradient(90deg, var(--border-strong) 0 8px, transparent 8px 14px) border-box;
+}
+
+.project-slot .project-body {
+  gap: 0.6rem;
+}
+
+.socket {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 7.5rem;
+  aspect-ratio: 1.5;
+  border: 1.5px dashed var(--border-strong);
+  border-radius: 8px;
+}
+
+.socket::before,
+.socket::after {
+  content: '';
+  position: absolute;
+  right: 12px;
+  left: 12px;
+  height: 6px;
+  background: repeating-linear-gradient(90deg, var(--border-strong) 0 4px, transparent 4px 11px);
+}
+
+.socket::before {
+  top: -7px;
+}
+
+.socket::after {
+  bottom: -7px;
+}
+
+.socket span {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  width: 8px;
+  height: 8px;
+  border: 1.5px solid var(--border-strong);
+  border-radius: 50%;
+}
+
+.live.is-pending i {
+  background: var(--led-off);
+  box-shadow: none;
+}
+
+.xray {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--code);
+  line-height: 0;
+  cursor: crosshair;
+}
+
+.xray img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.xray.is-cropped {
+  aspect-ratio: 2 / 1;
+}
+
+.xray.is-cropped img {
+  height: 100%;
+  object-fit: cover;
+  object-position: top;
+}
+
+.xray-schematic {
+  position: absolute;
+  inset: 0;
+  background: var(--code);
+  mask: radial-gradient(130px circle at var(--lx, -200px) var(--ly, -200px), #000 98%, transparent);
+}
+
+.xray-schematic svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.xray-ring {
+  position: absolute;
+  top: calc(var(--ly, -200px) - 130px);
+  left: calc(var(--lx, -200px) - 130px);
+  width: 260px;
+  height: 260px;
+  border-radius: 50%;
+  box-shadow: 0 0 0 1.5px var(--accent);
+  pointer-events: none;
+}
+
+.xray-hint {
+  color: var(--muted);
+  font: 500 0.75rem var(--f-mono);
+}
+
+.sch-box {
+  fill: var(--bg);
+  stroke: var(--border-strong);
+  stroke-width: 1.5;
+}
+
+.sch-title {
+  fill: var(--text);
+  font: 600 13px var(--f-mono);
+}
+
+.sch-detail {
+  fill: var(--muted);
+  font: 500 11px var(--f-mono);
+}
+
+.sch-wire {
+  fill: none;
+  stroke: var(--violet);
+  stroke-width: 1.6;
+  stroke-dasharray: 4 6;
+  animation: sch-flow 1.2s linear infinite;
+}
+
+.sch-pad {
+  fill: var(--accent);
+}
+
+@keyframes sch-flow {
+  to {
+    stroke-dashoffset: -20;
+  }
+}
+
+.reveal .xray img {
+  transform: scale(1.06);
+  transition: transform 1400ms var(--ease-out);
+}
+
+.reveal .in .xray img {
+  transform: none;
+}
+
+.xray-hint.is-touch {
+  display: none;
+}
+
+@media (max-width: 900px) {
+  .projects,
+  .project-wide,
+  .project-wide.is-flipped {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .project {
+    gap: 1.25rem;
+    padding: 1.5rem;
+  }
+
+  .project-wide .project-media {
+    order: -1;
+  }
+
+  .project-slot {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 520px) {
+  .project {
+    padding: 1.25rem;
+  }
+
+  .project h3 {
+    font-size: 1.35rem;
+  }
+
+  .project-halves {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.75rem;
+  }
+
+  .project-slot {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1.25rem;
+  }
+}
+
+.xray.is-touch .xray-schematic {
+  mask: none;
+  clip-path: circle(0 at var(--lx, 50%) var(--ly, 50%));
+  transition: clip-path 650ms var(--ease-in-out);
+}
+
+.xray.is-touch.is-revealed .xray-schematic {
+  clip-path: circle(150% at var(--lx, 50%) var(--ly, 50%));
+}
+
+.xray.is-touch .xray-ring {
+  display: none;
+}
+
+@media (pointer: coarse) and (max-width: 900px) {
+  .xray {
+    cursor: pointer;
+  }
+
+  .xray-hint.is-pointer {
+    display: none;
+  }
+
+  .xray-hint.is-touch {
+    display: inline;
+  }
+
+  .project-links a {
+    padding-block: 0.7rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal .xray img {
+    transform: none;
+  }
+
+  .xray-schematic {
+    transition: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sch-wire {
+    animation: none;
+  }
+}
