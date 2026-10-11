@@ -330,3 +330,65 @@
     width: 5.4rem;
   }
 }
+
+.reveal .stack-layers li::before {
+  transform: scaleY(0);
+  transform-origin: top;
+  transition: transform 500ms var(--ease-out);
+  transition-delay: calc(var(--i, 0) * 60ms + 80ms);
+}
+
+.reveal .stack-copy.in .stack-layers li::before {
+  transform: none;
+}
+
+.reveal .stack-layers span.rv {
+  transition-delay: calc(var(--i, 0) * 60ms + 140ms);
+}
+
+.reveal .stack-plate-parts em {
+  opacity: 0;
+  transform: translateY(-10px) scale(0.92);
+  transition:
+    opacity 320ms var(--ease-out),
+    transform 420ms var(--ease-out);
+  transition-delay: calc(320ms + var(--p, 0) * 110ms + var(--e, 0) * 70ms);
+}
+
+.reveal .stack-scene.in .stack-plate-parts em {
+  opacity: 1;
+  transform: none;
+}
+
+.reveal .stack-plate-name {
+  opacity: 0;
+  transition:
+    opacity 400ms var(--ease-out),
+    color 0.3s ease;
+  transition-delay: calc(240ms + var(--p, 0) * 110ms), 0s;
+}
+
+.reveal .stack-scene.in .stack-plate-name {
+  opacity: 1;
+}
+
+.reveal .stack-scene.in .stack-die {
+  animation: die-power 1100ms var(--ease-out) 760ms both;
+}
+
+@keyframes die-power {
+  from {
+    filter: brightness(0.35) saturate(0.3);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal .stack-layers li::before,
+  .reveal .stack-plate-parts em {
+    transform: none;
+  }
+
+  .reveal .stack-scene.in .stack-die {
+    animation: none;
+  }
+}
