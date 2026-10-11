@@ -165,6 +165,52 @@
       "infra": "INFRA"
     }
   },
+  "experience": {
+    "title": "git log --experience",
+    "lede": "Work on the main branch, studies running in parallel.",
+    "graph": "commit graph",
+    "mainLane": "main: work",
+    "studiesLane": "studies",
+    "initialCommit": "initial commit",
+    "commits": {
+      "fullStack": {
+        "date": "Feb 2026, present",
+        "title": "Full stack developer (contractor)",
+        "org": "CONSEPRO Taquara",
+        "items": [
+          "Continuing the work started during the internship, now focused on maintaining and evolving the city's on-street parking system.",
+          "Building features with React, Node.js/Express, JavaScript/TypeScript and MySQL, across the front end, the back end and the database.",
+          "Admin tools, reports, interface improvements and features with real-time data."
+        ],
+        "diff": ["admin tools", "reports", "real time"]
+      },
+      "english": {
+        "date": "Apr 2025, ongoing",
+        "title": "English",
+        "org": "KNN Idiomas"
+      },
+      "internship": {
+        "date": "Mar 2024, Feb 2026",
+        "title": "Software development intern",
+        "org": "FACCAT, CONSEPRO Project",
+        "items": [
+          "Development, testing and support of a production system, with growing autonomy on the front end, the back end and the database."
+        ],
+        "diff": ["React", "Node.js", "MySQL"]
+      },
+      "degree": {
+        "date": "2024, ongoing",
+        "title": "Bachelor's in Information Systems",
+        "org": "FACCAT, Faculdades Integradas de Taquara"
+      },
+      "technical": {
+        "date": "2021, 2024",
+        "title": "IT technician, integrated with high school",
+        "org": "Escola Técnica Estadual Monteiro Lobato, CIMOL",
+        "diff": ["programming logic"]
+      }
+    }
+  },
   "footer": {
     "copyright": "© {{year}} Pandora Becker Lovatto"
   }
