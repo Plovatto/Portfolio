@@ -149,6 +149,22 @@
     },
     "xrayHintTouch": "Toque na imagem para ver o esquemático"
   },
+  "stack": {
+    "title": "Uma stack, quatro camadas",
+    "lede": "Toda aplicação web é feita de camadas que trabalham juntas.",
+    "layers": {
+      "interface": "Interface",
+      "server": "Servidor",
+      "data": "Dados",
+      "infra": "Infraestrutura"
+    },
+    "plates": {
+      "interface": "INTERFACE",
+      "server": "SERVIDOR",
+      "data": "DADOS",
+      "infra": "INFRA"
+    }
+  },
   "footer": {
     "copyright": "© {{year}} Pandora Becker Lovatto"
   }

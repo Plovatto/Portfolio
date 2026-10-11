@@ -10,6 +10,7 @@ import type { OpeningStage } from './components/sections/Hero/CodeIntro'
 import { Hero } from './components/sections/Hero/Hero'
 import { BOOT_MS } from './components/sections/Hero/Terminal'
 import { Projects } from './components/sections/Projects/Projects'
+import { Stack } from './components/sections/Stack/Stack'
 import { PROFILE } from './constants/profile'
 import { useActiveSection } from './hooks/useActiveSection'
 import './components/layout/layout.css'
@@ -26,6 +27,8 @@ const Page = memo(function Page({ powered, onStage, onCompiled }: PageProps) {
       <Hero powered={powered} onStage={onStage} onCompiled={onCompiled} />
       <SectionDivider />
       <Projects />
+      <SectionDivider />
+      <Stack />
       <SiteFooter />
     </main>
   )

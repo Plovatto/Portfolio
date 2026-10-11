@@ -1,0 +1,332 @@
+.stack {
+  height: 320vh;
+}
+
+.stack-sticky {
+  position: sticky;
+  top: var(--tabs);
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  align-items: center;
+  gap: 2rem;
+  height: calc(100svh - var(--tabs) - var(--sbar));
+}
+
+.stack-copy {
+  padding: 2rem;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: color-mix(in oklab, var(--bg) 90%, transparent);
+}
+
+.stack-copy .lede {
+  margin-top: 0.9rem;
+}
+
+.stack-layers {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  margin-top: 2rem;
+  list-style: none;
+}
+
+.stack-layers li {
+  --w: 0;
+  position: relative;
+  padding: 0.85rem 1rem 0.85rem 1.3rem;
+  border-radius: 10px;
+  background: color-mix(in oklab, var(--c) calc(var(--w) * 12%), transparent);
+  opacity: calc(0.5 + var(--w) * 0.5);
+  transform: translateX(calc(var(--w) * 6px));
+}
+
+.stack-layers li::before {
+  content: '';
+  position: absolute;
+  top: 0.7rem;
+  bottom: 0.7rem;
+  left: 0;
+  width: 3px;
+  border-radius: 2px;
+  background: var(--c);
+  opacity: calc(0.3 + var(--w) * 0.7);
+}
+
+.stack-layers li[data-level='0'] {
+  --c: var(--blue);
+}
+
+.stack-layers li[data-level='1'] {
+  --c: color-mix(in oklab, var(--blue) 50%, var(--violet));
+}
+
+.stack-layers li[data-level='2'] {
+  --c: var(--violet);
+}
+
+.stack-layers li[data-level='3'] {
+  --c: var(--accent);
+}
+
+.stack-layers b {
+  display: block;
+  font-family: var(--f-display);
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.stack-layers span {
+  display: block;
+  margin-top: 0.2rem;
+  color: var(--muted);
+  font: 500 0.8rem var(--f-mono);
+}
+
+.stack-scene {
+  position: relative;
+  display: grid;
+  place-items: center;
+  height: 36rem;
+  perspective: 1700px;
+  perspective-origin: 50% 30%;
+}
+
+.stack-scene::before {
+  content: '';
+  position: absolute;
+  inset: -22% -28%;
+  background: radial-gradient(
+    closest-side,
+    color-mix(in oklab, var(--bg) 88%, transparent) 0,
+    color-mix(in oklab, var(--bg) 70%, transparent) 25%,
+    color-mix(in oklab, var(--bg) 45%, transparent) 50%,
+    color-mix(in oklab, var(--bg) 18%, transparent) 75%,
+    transparent 100%
+  );
+  pointer-events: none;
+}
+
+.stack-plates {
+  position: relative;
+  width: 20rem;
+  height: 20rem;
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+.stack-plate {
+  --w: 0;
+  position: absolute;
+  inset: 0;
+  border: 1px solid var(--border-strong);
+  border-radius: 16px;
+  background: linear-gradient(140deg, var(--surface-top), var(--surface-bottom));
+  transition:
+    border-color 0.3s ease,
+    box-shadow 0.3s ease;
+  will-change: transform, opacity;
+}
+
+.stack-plate::before {
+  content: '';
+  position: absolute;
+  inset: 12px;
+  border-radius: 10px;
+  background:
+    repeating-linear-gradient(0deg, var(--border) 0 1px, transparent 1px 22px),
+    repeating-linear-gradient(90deg, var(--border) 0 1px, transparent 1px 22px);
+}
+
+.stack-plate.is-focused {
+  border-color: var(--accent);
+  box-shadow:
+    0 0 0 1px var(--accent),
+    0 30px 50px -30px rgb(0 0 0 / 0.5);
+}
+
+.stack-plate-name {
+  position: absolute;
+  bottom: 16px;
+  left: 20px;
+  color: var(--muted);
+  font: 500 0.8rem var(--f-mono);
+  letter-spacing: 0.12em;
+}
+
+.stack-plate.is-focused .stack-plate-name {
+  color: var(--text);
+}
+
+.stack-plate-parts {
+  position: absolute;
+  inset: 26px 26px 46px;
+  display: flex;
+  flex-wrap: wrap;
+  align-content: flex-end;
+  gap: 8px;
+}
+
+.stack-plate-parts em {
+  padding: 0.45rem 0.6rem;
+  border-radius: 5px;
+  background: #16132f;
+  box-shadow: 0 2px 0 rgb(0 0 0 / 0.25);
+  color: #ece9ff;
+  font: 500 0.78rem var(--f-mono);
+  font-style: normal;
+}
+
+.stack-plate.is-chip {
+  border-color: rgb(255 255 255 / 0.1);
+  background: linear-gradient(160deg, #2a2650, #16132f 50%);
+}
+
+.stack-plate.is-chip::before {
+  display: none;
+}
+
+.stack-plate.is-chip .stack-plate-name {
+  color: rgb(236 233 255 / 0.75);
+}
+
+.stack-plate.is-chip.is-focused .stack-plate-name {
+  color: #fff;
+}
+
+.stack-die {
+  position: absolute;
+  top: 46%;
+  left: 50%;
+  width: 8.5rem;
+  aspect-ratio: 1;
+  overflow: hidden;
+  border-radius: 7px;
+  background: conic-gradient(
+    from var(--a, 30deg),
+    var(--blue),
+    var(--violet),
+    var(--accent),
+    var(--blue)
+  );
+  box-shadow:
+    0 0 0 7px rgb(255 255 255 / 0.04),
+    0 0 0 8px rgb(255 255 255 / 0.1),
+    inset 0 0 22px rgb(0 0 0 / 0.5);
+  transform: translate(-50%, -50%);
+}
+
+.stack-die::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    repeating-linear-gradient(0deg, rgb(0 0 0 / 0.3) 0 1px, transparent 1px 7px),
+    repeating-linear-gradient(90deg, rgb(0 0 0 / 0.3) 0 1px, transparent 1px 10px);
+}
+
+.stack-die::after {
+  content: '';
+  position: absolute;
+  inset: 18px;
+  border: 1px solid rgb(255 255 255 / 0.4);
+  border-radius: 2px;
+}
+
+@media (max-width: 900px) {
+  .stack-sticky {
+    grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+    gap: 1.25rem;
+    height: calc(100svh - var(--tabs) - var(--sbar) - var(--bottom-nav) - var(--safe-bottom));
+  }
+
+  .stack-copy {
+    padding: 1.5rem;
+  }
+
+  .stack-scene {
+    height: min(30rem, 70svh);
+  }
+
+  .stack-plates {
+    width: 16rem;
+    height: 16rem;
+  }
+}
+
+@media (max-width: 700px) {
+  .stack-sticky {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto minmax(0, 1fr);
+    align-content: center;
+    gap: 0.5rem;
+  }
+
+  .stack-copy {
+    padding: 1.1rem 1.2rem 1.2rem;
+  }
+
+  .stack-copy h2 {
+    font-size: clamp(1.55rem, 7vw, 2rem);
+  }
+
+  .stack-copy .lede {
+    margin-top: 0.5rem;
+    font-size: 0.95rem;
+  }
+
+  .stack-layers {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.4rem;
+    margin-top: 1rem;
+  }
+
+  .stack-layers li {
+    padding: 0.55rem 0.7rem 0.6rem 0.95rem;
+  }
+
+  .stack-layers li::before {
+    top: 0.55rem;
+    bottom: 0.55rem;
+  }
+
+  .stack-layers b {
+    font-size: 0.95rem;
+  }
+
+  .stack-layers span {
+    font-size: 0.7rem;
+  }
+
+  .stack-scene {
+    height: 100%;
+    min-height: 15rem;
+    perspective: 1100px;
+  }
+
+  .stack-plates {
+    width: 12.5rem;
+    height: 12.5rem;
+  }
+
+  .stack-plate-parts {
+    inset: 16px 16px 34px;
+    gap: 6px;
+  }
+
+  .stack-plate-parts em {
+    padding: 0.3rem 0.45rem;
+    font-size: 0.66rem;
+  }
+
+  .stack-plate-name {
+    bottom: 11px;
+    left: 14px;
+    font-size: 0.66rem;
+  }
+
+  .stack-die {
+    width: 5.4rem;
+  }
+}
