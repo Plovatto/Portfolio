@@ -1,0 +1,8 @@
+name = "portfolio-contact"
+main = "src/index.ts"
+compatibility_date = "2026-10-01"
+workers_dev = true
+preview_urls = false
+
+[vars]
+ALLOWED_ORIGINS = "https://plovatto.github.io,http://localhost:5173,http://localhost:5179"
