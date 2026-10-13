@@ -6,6 +6,7 @@ import { EditorTabs } from './components/layout/EditorTabs'
 import { SiteFooter } from './components/layout/SiteFooter'
 import { StatusBar } from './components/layout/StatusBar'
 import { SectionDivider } from './components/ui/SectionDivider'
+import { Contact } from './components/sections/Contact/Contact'
 import { Experience } from './components/sections/Experience/Experience'
 import type { OpeningStage } from './components/sections/Hero/CodeIntro'
 import { Hero } from './components/sections/Hero/Hero'
@@ -20,9 +21,10 @@ interface PageProps {
   powered: boolean
   onStage: (stage: OpeningStage) => void
   onCompiled: () => void
+  onSent: () => void
 }
 
-const Page = memo(function Page({ powered, onStage, onCompiled }: PageProps) {
+const Page = memo(function Page({ powered, onStage, onCompiled, onSent }: PageProps) {
   return (
     <main id="main" tabIndex={-1}>
       <Hero powered={powered} onStage={onStage} onCompiled={onCompiled} />
@@ -32,6 +34,8 @@ const Page = memo(function Page({ powered, onStage, onCompiled }: PageProps) {
       <Stack />
       <SectionDivider />
       <Experience />
+      <SectionDivider />
+      <Contact onSent={onSent} />
       <SiteFooter />
     </main>
   )
@@ -42,6 +46,7 @@ function App() {
   const active = useActiveSection()
   const [stage, setStage] = useState<OpeningStage>('idle')
   const [powered, setPowered] = useState(false)
+  const [messageSent, setMessageSent] = useState(false)
 
   const build = {
     idle: t('statusBar.build'),
@@ -51,6 +56,7 @@ function App() {
   }[stage]
 
   const powerOn = useCallback(() => setPowered(true), [])
+  const markSent = useCallback(() => setMessageSent(true), [])
 
   return (
     <>
@@ -59,9 +65,9 @@ function App() {
       </a>
       <CircuitBackground label={PROFILE.boardLabel} active={powered} />
       <ActivityBar active={active} />
-      <EditorTabs active={active} messageSent={false} />
+      <EditorTabs active={active} messageSent={messageSent} />
       <StatusBar active={active} build={build} />
-      <Page powered={powered} onStage={setStage} onCompiled={powerOn} />
+      <Page powered={powered} onStage={setStage} onCompiled={powerOn} onSent={markSent} />
     </>
   )
 }
