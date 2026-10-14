@@ -196,7 +196,7 @@
   background: none;
   color: var(--muted);
   font: 500 0.75rem var(--f-mono);
-  cursor: pointer;
+  cursor: var(--cursor-pointer);
   transition:
     color 0.15s ease,
     border-color 0.15s ease,
@@ -416,7 +416,7 @@ pre.is-compiling .code-line:not(:has(.tok-name)) {
   background: transparent;
   color: var(--muted);
   font: 500 0.76rem var(--f-mono);
-  cursor: pointer;
+  cursor: var(--cursor-pointer);
   transition:
     color 0.15s ease,
     border-color 0.15s ease,
