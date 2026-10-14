@@ -137,6 +137,62 @@ textarea,
   cursor: progress;
 }
 
+html {
+  scrollbar-gutter: stable;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  border: 2px solid transparent;
+  border-radius: 99px;
+  background: color-mix(in oklab, var(--violet) 45%, transparent) padding-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: color-mix(in oklab, var(--violet) 75%, transparent) padding-box;
+}
+
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+html::-webkit-scrollbar {
+  width: 11px;
+}
+
+html::-webkit-scrollbar-track {
+  border-left: 1px solid var(--border);
+  background: var(--panel);
+}
+
+html::-webkit-scrollbar-thumb {
+  border-width: 3px;
+  background: linear-gradient(180deg, var(--blue), var(--violet) 60%, var(--accent)) padding-box;
+}
+
+html::-webkit-scrollbar-thumb:hover {
+  border-width: 2px;
+}
+
+@supports not selector(::-webkit-scrollbar) {
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: color-mix(in oklab, var(--violet) 55%, transparent) transparent;
+  }
+
+  html {
+    scrollbar-color: var(--violet) var(--panel);
+  }
+}
+
 html,
 body {
   overflow-x: clip;
