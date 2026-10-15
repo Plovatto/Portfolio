@@ -184,12 +184,25 @@
           "Building features with React, Node.js/Express, JavaScript/TypeScript and MySQL, across the front end, the back end and the database.",
           "Admin tools, reports, interface improvements and features with real-time data."
         ],
-        "diff": ["admin tools", "reports", "real time"]
+        "diff": ["admin tools", "reports", "real time"],
+        "show": [
+          "@@ role @@",
+          "- software development intern",
+          "+ full stack developer (contractor)",
+          "@@ focus @@",
+          "+ maintenance and evolution of the paid parking system",
+          "+ admin tools and reports",
+          "+ interface improvements",
+          "+ features with real-time data",
+          "@@ stack @@",
+          "  React, Node.js/Express, JavaScript/TypeScript, MySQL"
+        ]
       },
       "english": {
         "date": "Apr 2025, ongoing",
         "title": "English",
-        "org": "KNN Idiomas"
+        "org": "KNN Idiomas",
+        "show": ["@@ languages @@", "+ English: basic/intermediate, improving"]
       },
       "internship": {
         "date": "Mar 2024, Feb 2026",
@@ -198,20 +211,46 @@
         "items": [
           "Development, testing and support of a production system, with growing autonomy on the front end, the back end and the database."
         ],
-        "diff": ["React", "Node.js", "MySQL"]
+        "diff": ["React", "Node.js", "MySQL"],
+        "show": [
+          "@@ role @@",
+          "- student",
+          "+ software development intern",
+          "@@ routine @@",
+          "+ development, maintenance, testing and support of a production system",
+          "+ shipping changes to production",
+          "+ growing autonomy across front end, back end and database",
+          "@@ stack @@",
+          "+ React",
+          "+ Node.js",
+          "+ MySQL"
+        ]
       },
       "degree": {
         "date": "2024, ongoing",
         "title": "Bachelor's in Information Systems",
-        "org": "FACCAT, Faculdades Integradas de Taquara"
+        "org": "FACCAT, Faculdades Integradas de Taquara",
+        "show": [
+          "@@ education @@",
+          "  IT technician",
+          "+ bachelor's in Information Systems, in progress"
+        ]
       },
       "technical": {
         "date": "2021, 2024",
         "title": "IT technician, integrated with high school",
         "org": "Escola Técnica Estadual Monteiro Lobato, CIMOL",
-        "diff": ["programming logic"]
+        "diff": ["programming logic"],
+        "show": [
+          "@@ education @@",
+          "+ IT technician, integrated with high school",
+          "+ programming logic"
+        ]
       }
-    }
+    },
+    "show": "git show",
+    "showLabel": "Commit {{hash}} details",
+    "file": "career.md"
   },
   "contact": {
     "title": "Let's talk",

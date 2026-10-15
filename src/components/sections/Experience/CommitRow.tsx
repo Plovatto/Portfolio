@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { Commit } from '../../../constants/experience'
 import { prefersReducedMotion } from '../../../hooks/useReducedMotion'
+import { CommitShow } from './CommitShow'
 
 const NODE_Y = 28
 const MAIN_X = 1.2 * 16 + 1
@@ -18,6 +19,7 @@ export function CommitRow({ commit, first, last }: CommitRowProps) {
   const ref = useRef<HTMLDivElement>(null)
   const [lit, setLit] = useState(prefersReducedMotion)
   const [height, setHeight] = useState(0)
+  const [showing, setShowing] = useState(false)
   const key = (path: string) => `experience.commits.${commit.id}.${path}`
   const items = t(key('items'), { returnObjects: true, defaultValue: [] }) as string[]
   const diff = t(key('diff'), { returnObjects: true, defaultValue: [] }) as string[]
@@ -106,7 +108,16 @@ export function CommitRow({ commit, first, last }: CommitRowProps) {
             ))}
           </div>
         ) : null}
+        <button
+          type="button"
+          className="commit-show"
+          aria-haspopup="dialog"
+          onClick={() => setShowing(true)}
+        >
+          <span aria-hidden="true">$</span> {t('experience.show')} {commit.hash}
+        </button>
       </div>
+      <CommitShow commit={commit} open={showing} onClose={() => setShowing(false)} />
     </div>
   )
 }

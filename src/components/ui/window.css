@@ -123,6 +123,84 @@ html:has(.window[open]) {
   overflow: auto;
 }
 
+.git-show {
+  padding: 1.1rem 1.3rem 1.4rem;
+  font: 400 0.84rem / 1.7 var(--f-mono);
+}
+
+.git-show-meta {
+  color: var(--muted);
+}
+
+.git-show-hash {
+  color: var(--signal);
+}
+
+.git-show-ref {
+  color: var(--accent);
+}
+
+.git-show-message {
+  margin-top: 0.9rem;
+  padding-left: 2rem;
+  color: var(--text);
+  font-weight: 600;
+}
+
+.git-show-message.is-org {
+  margin-top: 0;
+  color: var(--muted);
+  font-weight: 400;
+}
+
+.git-show-file {
+  margin-top: 1.1rem;
+  color: var(--text);
+  font-weight: 600;
+}
+
+.git-show-diff {
+  margin-top: 0.3rem;
+  list-style: none;
+}
+
+.git-show-diff li {
+  padding: 0 0.6rem;
+  border-radius: 4px;
+  white-space: pre-wrap;
+  animation: diff-in 320ms var(--ease-out) both;
+  animation-delay: calc(var(--i, 0) * 40ms + 120ms);
+}
+
+.git-show-diff .is-hunk {
+  color: var(--signal);
+}
+
+.git-show-diff .is-hunk:not(:first-child) {
+  margin-top: 0.45rem;
+}
+
+.git-show-diff .is-add {
+  background: color-mix(in oklab, var(--add) 12%, transparent);
+  color: var(--add);
+}
+
+.git-show-diff .is-del {
+  background: color-mix(in oklab, var(--accent) 10%, transparent);
+  color: var(--accent);
+}
+
+.git-show-diff .is-ctx {
+  color: var(--muted);
+}
+
+@keyframes diff-in {
+  from {
+    opacity: 0;
+    transform: translateX(-6px);
+  }
+}
+
 @media (max-width: 600px) {
   .window-frame {
     width: calc(100vw - 1.5rem);

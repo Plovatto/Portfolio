@@ -268,3 +268,32 @@
     animation: none;
   }
 }
+
+.commit-show {
+  margin-top: 0.75rem;
+  padding: 0.3rem 0.65rem;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--tag);
+  color: var(--muted);
+  font: 500 0.78rem var(--f-mono);
+  transition:
+    color 0.15s ease,
+    border-color 0.15s ease,
+    transform 120ms var(--ease-out);
+}
+
+.commit-show span {
+  color: var(--accent);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .commit-show:hover {
+    border-color: color-mix(in oklab, var(--accent) 55%, var(--border));
+    color: var(--text);
+  }
+}
+
+.commit-show:active {
+  transform: scale(0.97);
+}
