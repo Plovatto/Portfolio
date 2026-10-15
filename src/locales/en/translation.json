@@ -260,5 +260,8 @@
   },
   "footer": {
     "copyright": "© {{year}} Pandora Becker Lovatto"
+  },
+  "window": {
+    "close": "close"
   }
 }
