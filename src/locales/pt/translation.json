@@ -29,7 +29,9 @@
     "build": "✓ build passando",
     "writing": "⟳ escrevendo {{file}}",
     "compiling": "⟳ compilando",
-    "ready": "✓ pronto em {{ms}} ms"
+    "ready": "✓ pronto em {{ms}} ms",
+    "resume": "Baixar currículo",
+    "resumeLabel": "Baixar currículo em PDF"
   },
   "hero": {
     "role": "Desenvolvedora full stack",

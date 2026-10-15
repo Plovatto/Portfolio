@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next'
 import type { SectionId } from '../../constants/navigation'
+import { PROFILE } from '../../constants/profile'
 import { Icon } from '../ui/Icon'
 
 interface StatusBarProps {
@@ -18,6 +19,15 @@ export function StatusBar({ active, build }: StatusBarProps) {
       </span>
       <span className="hide-sm">{build}</span>
       <span className="hide-sm">{t(`nav.files.${active}`)}</span>
+      <a
+        className="status-resume"
+        href={`${import.meta.env.BASE_URL}${PROFILE.resume}`}
+        download
+        aria-label={t('statusBar.resumeLabel')}
+      >
+        <Icon name="download" />
+        {t('statusBar.resume')}
+      </a>
     </footer>
   )
 }

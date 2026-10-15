@@ -236,6 +236,35 @@
   stroke-width: 2;
 }
 
+.status-resume {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  align-self: stretch;
+  margin-left: auto;
+  margin-right: -0.8rem;
+  padding: 0 0.8rem;
+  color: #fff;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background-color 0.15s ease;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .status-resume:hover {
+    background: rgb(255 255 255 / 0.14);
+  }
+}
+
+.status-resume:active {
+  background: rgb(255 255 255 / 0.22);
+}
+
+.status-resume:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: -2px;
+}
+
 .theme-icons {
   position: relative;
   display: grid;

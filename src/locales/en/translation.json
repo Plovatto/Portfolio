@@ -29,7 +29,9 @@
     "build": "✓ build passing",
     "writing": "⟳ writing {{file}}",
     "compiling": "⟳ compiling",
-    "ready": "✓ ready in {{ms}} ms"
+    "ready": "✓ ready in {{ms}} ms",
+    "resume": "Résumé (PT)",
+    "resumeLabel": "Download résumé, PDF in Portuguese"
   },
   "hero": {
     "role": "Full stack developer",
