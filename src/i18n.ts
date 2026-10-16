@@ -32,7 +32,7 @@ i18n
 function syncDocument() {
   const language = currentLanguage()
   document.documentElement.lang = HTML_LANG[language]
-  document.title = i18n.t('meta.title')
+  document.title = i18n.t(document.hidden ? 'meta.away' : 'meta.title')
   document
     .querySelector('meta[name="description"]')
     ?.setAttribute('content', i18n.t('meta.description'))
@@ -40,5 +40,6 @@ function syncDocument() {
 
 syncDocument()
 i18n.on('languageChanged', syncDocument)
+document.addEventListener('visibilitychange', syncDocument)
 
 export default i18n
