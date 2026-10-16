@@ -149,7 +149,12 @@
       "title": "Next project",
       "description": "This spot on the board is already reserved for what comes next."
     },
-    "xrayHintTouch": "Tap the image to see the schematic"
+    "xrayHintTouch": "Tap the image to see the schematic",
+    "run": "Run here",
+    "runLabel": "Live preview of {{name}}",
+    "reload": "reload",
+    "newTab": "open in new tab",
+    "loading": "loading…"
   },
   "stack": {
     "title": "One stack, four layers",

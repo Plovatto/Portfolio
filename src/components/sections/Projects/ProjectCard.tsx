@@ -1,9 +1,11 @@
+import { useState } from 'react'
 import type { CSSProperties } from 'react'
 import { useTranslation } from 'react-i18next'
 import { isSplitTechs } from '../../../constants/projects'
 import type { Project } from '../../../constants/projects'
 import { useReveal } from '../../../hooks/useReveal'
 import { Chip } from '../../ui/Chip'
+import { ProjectPreview } from './ProjectPreview'
 import { XRay } from './XRay'
 
 const order = (i: number) => ({ '--i': i }) as CSSProperties
@@ -26,6 +28,7 @@ export function ProjectCard({ project }: { project: Project }) {
   const key = (path: string) => `projects.${project.id}.${path}`
   const { techs } = project
   const split = isSplitTechs(techs)
+  const [previewing, setPreviewing] = useState(false)
 
   const body = (
     <div className="project-body">
@@ -54,6 +57,17 @@ export function ProjectCard({ project }: { project: Project }) {
         </div>
       )}
       <div className="project-links rv" style={order(split ? 5 : 3)}>
+        <button
+          type="button"
+          className="project-run"
+          aria-haspopup="dialog"
+          onClick={() => setPreviewing(true)}
+        >
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M8 5.5v13l10.5-6.5z" />
+          </svg>
+          {t('projects.run')}
+        </button>
         {project.links.map((link) => (
           <a key={link.href} href={link.href}>
             {t(key(`links.${link.label}`))}
@@ -92,6 +106,12 @@ export function ProjectCard({ project }: { project: Project }) {
     >
       {project.flip ? media : body}
       {project.flip ? body : media}
+      <ProjectPreview
+        name={project.name}
+        url={project.preview}
+        open={previewing}
+        onClose={() => setPreviewing(false)}
+      />
     </Chip>
   )
 }

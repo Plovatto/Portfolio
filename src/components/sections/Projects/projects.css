@@ -402,3 +402,48 @@
     animation: none;
   }
 }
+
+.project-run {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.3rem 0.75rem 0.3rem 0.6rem;
+  border: 1px solid color-mix(in oklab, var(--accent) 45%, var(--border));
+  border-radius: 6px;
+  background: color-mix(in oklab, var(--accent) 9%, transparent);
+  color: var(--text);
+  font: 600 0.8125rem var(--f-body);
+  transition:
+    border-color 0.15s ease,
+    background-color 0.15s ease,
+    transform 120ms var(--ease-out);
+}
+
+.project-run svg {
+  width: 0.75rem;
+  height: 0.75rem;
+  fill: var(--accent);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .project-run:hover {
+    border-color: var(--accent);
+    background: color-mix(in oklab, var(--accent) 16%, transparent);
+  }
+}
+
+.project-run:active {
+  transform: scale(0.97);
+}
+
+@media (max-width: 600px) {
+  .project-links {
+    gap: 0.6rem 1.1rem;
+  }
+
+  .project-run {
+    flex-basis: 100%;
+    justify-content: center;
+    min-height: 2.75rem;
+  }
+}
