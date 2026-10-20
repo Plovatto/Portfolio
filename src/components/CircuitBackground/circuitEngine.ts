@@ -175,9 +175,10 @@ interface LayoutBox {
 }
 
 function layoutBox(el: HTMLElement): LayoutBox {
+  const anchor = el.closest<HTMLElement>('[data-board-pin]') ?? el
   let x = 0
   let y = 0
-  for (let node: HTMLElement | null = el; node; node = node.offsetParent as HTMLElement | null) {
+  for (let node: HTMLElement | null = anchor; node; node = node.offsetParent as HTMLElement | null) {
     x += node.offsetLeft
     y += node.offsetTop
   }
