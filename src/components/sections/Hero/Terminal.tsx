@@ -32,6 +32,10 @@ export function Terminal({ powered }: TerminalProps) {
   const outputRef = useRef<HTMLDivElement>(null)
   const busyRef = useRef(false)
   const abortRef = useRef<AbortController | null>(null)
+  const shownRef = useRef<'boot' | TerminalCommand | null>(null)
+  const interruptedRef = useRef(false)
+  const whoamiTimerRef = useRef(0)
+  const languageRef = useRef(i18n.resolvedLanguage)
   const [active, setActive] = useState<TerminalCommand | null>(null)
 
   const type = useCallback(
@@ -73,6 +77,7 @@ export function Terminal({ powered }: TerminalProps) {
     async (name: TerminalCommand) => {
       if (busyRef.current) return
       setActive(name)
+      shownRef.current = name
       const finished = await type(
         typedCommand(name, t),
         commandOutput(name, t),
@@ -90,6 +95,7 @@ export function Terminal({ powered }: TerminalProps) {
   )
 
   const boot = useEffectEvent(async (onWhoami: (run: () => void) => void) => {
+    shownRef.current = 'boot'
     const finished = await type(
       'npm run dev',
       bootOutput(t, BOOT_MS),
@@ -110,6 +116,7 @@ export function Terminal({ powered }: TerminalProps) {
 
   useEffect(() => {
     const stop = () => {
+      interruptedRef.current = busyRef.current
       abortRef.current?.abort()
       busyRef.current = false
     }
@@ -117,8 +124,30 @@ export function Terminal({ powered }: TerminalProps) {
     return () => {
       i18n.off('languageChanged', stop)
       abortRef.current?.abort()
+      clearTimeout(whoamiTimerRef.current)
     }
   }, [i18n])
+
+  const redraw = useEffectEvent(async () => {
+    const shown = shownRef.current
+    const interrupted = interruptedRef.current
+    interruptedRef.current = false
+    if (!shown) return
+    if (shown !== 'boot') {
+      await type(typedCommand(shown, t), commandOutput(shown, t), 0, 0)
+      return
+    }
+    const finished = await type('npm run dev', bootOutput(t, BOOT_MS), 0, 0)
+    if (finished && interrupted) {
+      whoamiTimerRef.current = window.setTimeout(() => run('whoami'), WHOAMI_AFTER_BOOT_MS)
+    }
+  })
+
+  useEffect(() => {
+    if (languageRef.current === i18n.resolvedLanguage) return
+    languageRef.current = i18n.resolvedLanguage
+    redraw()
+  }, [i18n.resolvedLanguage])
 
   return (
     <Chip refdes="U1" hero pins="all" led={false} className="terminal">
