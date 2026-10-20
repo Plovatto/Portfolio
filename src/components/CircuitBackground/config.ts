@@ -125,3 +125,11 @@ export const FRAME_BUDGET = {
   slowShare: 0.5,
   ignoreAbove: 250,
 }
+
+export const MOTION = {
+  calm: 900,
+  fast: 2600,
+  min: 0.15,
+  dimRate: 14,
+  restoreRate: 4,
+}
