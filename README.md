@@ -1,33 +1,115 @@
-# Portfolio
+# Pandora Lovatto · Portfolio
 
-Personal portfolio of Pandora Becker Lovatto, built with React, TypeScript, and Vite.
+[![CI](https://github.com/Plovatto/portifolio/actions/workflows/ci.yml/badge.svg)](https://github.com/Plovatto/portifolio/actions/workflows/ci.yml)
+[![Tests](https://github.com/Plovatto/portifolio/actions/workflows/tests.yml/badge.svg)](https://github.com/Plovatto/portifolio/actions/workflows/tests.yml)
+[![Deploy](https://github.com/Plovatto/portifolio/actions/workflows/deploy-site.yml/badge.svg)](https://github.com/Plovatto/portifolio/actions/workflows/deploy-site.yml)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
-## Stack
+Personal portfolio of Pandora Becker Lovatto, full stack developer. The page is a living circuit board built with React, TypeScript and Vite: every section is mounted as a chip on a procedurally routed PCB, inside an interface that looks and behaves like a code editor.
 
-- [React 19](https://react.dev/)
-- [TypeScript](https://www.typescriptlang.org/)
-- [Vite](https://vite.dev/)
-- [Tailwind CSS v4](https://tailwindcss.com/)
-- [oxlint](https://oxc.rs/) + [Prettier](https://prettier.io/)
+**Live site:** https://plovatto.github.io/portifolio/
+
+<p align="center">
+  <img src="docs/screenshots/hero.webp" alt="Hero with the copper nameplate, the interactive terminal and the circuit board background" width="900">
+</p>
+
+<p align="center"><em>The hero is written as code, compiled on load and wired into the board</em></p>
+
+<table>
+  <tr>
+    <td width="50%"><img src="docs/screenshots/projects.webp" alt="SparkChat project card with the x-ray lens showing the product schematic"></td>
+    <td width="50%"><img src="docs/screenshots/stack.webp" alt="Stack section as an exploded chip with four layers, light theme"></td>
+  </tr>
+  <tr>
+    <td align="center"><em>Projects with an x-ray schematic lens</em></td>
+    <td align="center"><em>The stack as a pinned exploded chip</em></td>
+  </tr>
+  <tr>
+    <td width="50%"><img src="docs/screenshots/git-show.webp" alt="git show window with a diff of a career period"></td>
+    <td width="50%"><img src="docs/screenshots/contact.webp" alt="Contact form with the live request preview, light theme"></td>
+  </tr>
+  <tr>
+    <td align="center"><em>Each career commit opens a <code>git show</code> diff</em></td>
+    <td align="center"><em>Contact form with a live request preview</em></td>
+  </tr>
+</table>
+
+<p align="center">
+  <img src="docs/screenshots/mobile-hero.webp" alt="Hero on a phone, dark theme" width="260">
+  &nbsp;&nbsp;
+  <img src="docs/screenshots/mobile-projects.webp" alt="Project card on a phone, light theme" width="260">
+</p>
+
+<p align="center"><em>Fully responsive, with a bottom navigation bar on phones</em></p>
 
 ## Features
 
-- **Editor-style shell** — activity bar, file tabs and a status bar that follow the scroll; the hero opens as its own source code, compiles, and the name flies into the title.
-- **Portuguese and English** — follows the browser language, with a PT / EN switch at the top right that is remembered (`i18next`).
-- **Light/dark theme** — toggled from the activity bar with a circular wipe (View Transitions), persisted in `localStorage` with a fallback to the system preference (`prefers-color-scheme`).
-- **Sections** — copper nameplate wired into the board (with the electrified "tt" mark), interactive terminal, projects with an x-ray lens over the screenshot, a pinned exploded-chip stack, the career as a git commit graph, a contact form that previews the request it sends (delivered by a Cloudflare Worker with Turnstile), and a résumé download in the status bar. Each commit opens a `git show` window with a diff of that period, each project can run live inside a browser-style window, and the tab title turns into "● unsaved changes" while the page is in the background.
-- **Circuit board background** — the page is rendered as a procedurally routed PCB (45° traces, vias, buses, ICs, passives, silkscreen) that scrolls with the content. Content marked `data-chip` is mounted as a chip with pins wired into the board; `data-quiet` blocks keep clean substrate behind text.
-  - Power-on reveal from the hero chip, a spine bus that carries "current" down the page as you scroll and powers each chip (its LED lights up).
-  - Signals roam the trace graph; the cursor lights the copper and sparks pulses, clicks send a wave that branches at every junction, hovering a card pulls current into its pins.
-  - Scrolling never measures the layout: the scroll position comes from the scroll event, the scrollspy uses an IntersectionObserver, and pinned sections are measured only when the layout changes.
-  - If frames stay slow, the board switches to a low-power mode (1x resolution, half the pulses) so the page keeps scrolling smoothly.
-  - A slower, fainter inner layer with mouse parallax adds depth. With `prefers-reduced-motion` the board is drawn static and only redraws on scroll or pointer input.
-  - `data-bare` chips draw their own light and receive the current as `board:current` events; a `data-board-pin` section freezes the board while its sticky child is pinned.
+- Editor-style shell with an activity bar, file tabs and a status bar that follow the scroll
+- Opening animation where the hero is typed as source code, compiled and flown into the title
+- Circuit board background routed at runtime: pulses roam the traces, clicks send current waves and each card powers on as you scroll
+- Interactive terminal with `whoami`, `skills --list`, `projects`, `git log` and `contact`
+- Project cards with an x-ray lens over the screenshot and a live preview window that runs each project inside the page
+- The stack as an exploded chip that separates layer by layer while pinned
+- Career rendered as a git commit graph, with a `git show` diff for every period
+- Contact form with a live request preview, human verification and delivery feedback, sent through a Cloudflare Worker
+- Portuguese and English, detected from the browser, with an animated language switch
+- Light and dark themes, custom cursors, résumé download and a tab title that marks unsaved changes while you are away
+- Accessible and fast: skip link, reduced motion support, self-hosted fonts, responsive images and a low-power mode for slow devices
+
+## Tech stack
+
+- [React](https://react.dev/) 19
+- [TypeScript](https://www.typescriptlang.org/)
+- [Vite](https://vite.dev/)
+- [Tailwind CSS](https://tailwindcss.com/) 4
+- [i18next](https://www.i18next.com/) and [react-i18next](https://react.i18next.com/)
+- [Vitest](https://vitest.dev/) for unit tests
+- [Cloudflare Workers](https://workers.cloudflare.com/), [Resend](https://resend.com/) and [Turnstile](https://www.cloudflare.com/products/turnstile/) for the contact form
+- [oxlint](https://oxc.rs/) and [Prettier](https://prettier.io/) for linting and formatting
 
 ## Getting started
 
+### Prerequisites
+
+- [Node.js](https://nodejs.org/) 22.12 or newer
+- npm
+
+### Installation
+
+Clone the repository:
+
+```bash
+git clone https://github.com/Plovatto/portifolio.git
+```
+
+Go to the project folder:
+
+```bash
+cd portifolio
+```
+
+Install the dependencies:
+
 ```bash
 npm install
+```
+
+### Environment variables
+
+Copy `.env.example` to `.env.local` and fill in:
+
+| Variable                  | Description                                                                         |
+| ------------------------- | ----------------------------------------------------------------------------------- |
+| `VITE_CONTACT_ENDPOINT`   | URL of the contact Worker (see [`worker/README.md`](worker/README.md))              |
+| `VITE_TURNSTILE_SITE_KEY` | Public Turnstile site key; the example value is Cloudflare's test key, which passes |
+
+Without an endpoint the form still validates, and sending shows an error.
+
+### Running
+
+Start the development server:
+
+```bash
 npm run dev
 ```
 
@@ -42,37 +124,34 @@ npm run dev
 | `npm run typecheck`    | Type-checks the project               |
 | `npm test`             | Runs the unit tests                   |
 | `npm run format`       | Formats the code with Prettier        |
-| `npm run format:check` | Checks formatting (used in CI)        |
+| `npm run format:check` | Checks the formatting                 |
 
 ## Project structure
 
 ```
 src/
 ├─ components/
-│  ├─ CircuitBackground/   # canvas board engine (routing, pulses, pinned sections, bare chips)
+│  ├─ CircuitBackground/   # canvas board engine: routing, pulses, waves, pinned sections
 │  ├─ layout/              # editor chrome: activity bar, tabs, status bar, footer
-│  ├─ sections/            # Hero, Projects, Stack, Experience, Contact (component + styles each)
-│  └─ ui/                  # Chip, Icon, SectionHead, SectionDivider
-├─ constants/              # non-translatable data: profile, projects, stack, experience, navigation
-├─ context/                # theme context (Theme, ThemeProvider)
+│  ├─ sections/            # Hero, Projects, Stack, Experience, Contact
+│  └─ ui/                  # Chip, Icon, SectionHead, SectionDivider, WindowDialog
+├─ constants/              # profile, projects, stack, experience and navigation data
+├─ context/                # theme context
 ├─ hooks/                  # useTheme, useReveal, useActiveSection, useReducedMotion
-├─ lib/                    # contact, turnstile, introLock, languageTransition, scramble, typewriter, tween, svg, viewTransition
-├─ locales/                # pt and en translations (every on-screen string)
-├─ styles/index.css        # tokens, base, chip, buttons, entrance motion
-├─ i18n.ts                 # language detection (saved choice, then the browser)
+├─ lib/                    # contact, turnstile, typewriter, scramble, tween and other helpers
+├─ locales/                # Portuguese and English translations
+├─ styles/index.css        # design tokens, base styles and entrance motion
+├─ i18n.ts
 ├─ App.tsx
 └─ main.tsx
-public/                    # favicon, touch icon, résumé PDF, project images (WebP), social preview, sitemap, 404
-worker/                    # Cloudflare Worker that sends the contact e-mail (see worker/README.md)
+public/                    # icons, résumé, project images, social preview, sitemap, 404
+worker/                    # Cloudflare Worker that delivers the contact e-mail
+docs/screenshots/          # images used in this README
 ```
-
-## Environment
-
-Copy `.env.example` to `.env.local` and set `VITE_CONTACT_ENDPOINT` (the contact Worker URL) and `VITE_TURNSTILE_SITE_KEY` (the public Turnstile key; the example value is Cloudflare's test key, which always passes). Without an endpoint the form still validates, and sending shows an error.
 
 ## Deploy
 
-The site is published to GitHub Pages at `https://plovatto.github.io/portifolio/` (production builds use the `/portifolio/` base; override it with `VITE_BASE`). Fonts and project images are self-hosted, so the page makes no third-party requests until the contact form is used.
+The site is published to GitHub Pages and the contact Worker to Cloudflare, both through GitHub Actions.
 
 | Workflow            | Runs on                               | Does                                                                           |
 | ------------------- | ------------------------------------- | ------------------------------------------------------------------------------ |
@@ -81,9 +160,15 @@ The site is published to GitHub Pages at `https://plovatto.github.io/portifolio/
 | `deploy-site.yml`   | pushes to `main` (outside `worker/`)  | lint, tests, build and deploy to GitHub Pages                                  |
 | `deploy-worker.yml` | pushes to `main` that touch `worker/` | typecheck, tests and `wrangler deploy`                                         |
 
-One-time setup in the GitHub repository:
+Production builds use the `/portifolio/` base path; override it with `VITE_BASE`.
 
-1. **Settings → Pages → Source:** GitHub Actions.
-2. **Settings → Secrets and variables → Actions → Variables:** `VITE_CONTACT_ENDPOINT` (the Worker URL) and `VITE_TURNSTILE_SITE_KEY` (the public site key). Both end up in the public bundle, so they are variables, not secrets.
-3. **Secrets:** `CLOUDFLARE_API_TOKEN` (template "Edit Cloudflare Workers") and `CLOUDFLARE_ACCOUNT_ID`, used only by the worker deploy. The worker's own secrets (`CONTACT_TO`, `RESEND_API_KEY`, `TURNSTILE_SECRET`) stay in Cloudflare and are never in the repository.
-4. **Cloudflare Turnstile:** add `plovatto.github.io` to the widget's hostnames. The worker already allows that origin in `worker/wrangler.toml`.
+One-time setup in the repository settings:
+
+1. **Pages → Source:** GitHub Actions.
+2. **Secrets and variables → Actions → Variables:** `VITE_CONTACT_ENDPOINT` and `VITE_TURNSTILE_SITE_KEY`. Both end up in the public bundle, so they are variables, not secrets.
+3. **Secrets:** `CLOUDFLARE_API_TOKEN` (template "Edit Cloudflare Workers") and `CLOUDFLARE_ACCOUNT_ID`, used only by the worker deploy. The worker's own secrets (`CONTACT_TO`, `RESEND_API_KEY`, `TURNSTILE_SECRET`) stay in Cloudflare.
+4. **Cloudflare Turnstile:** add `plovatto.github.io` to the widget hostnames.
+
+## License
+
+Released under the [MIT License](LICENSE).
