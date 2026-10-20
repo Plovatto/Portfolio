@@ -61,7 +61,6 @@ Personal portfolio of Pandora Becker Lovatto, full stack developer. The page is 
 - [React](https://react.dev/) 19
 - [TypeScript](https://www.typescriptlang.org/)
 - [Vite](https://vite.dev/)
-- [Tailwind CSS](https://tailwindcss.com/) 4
 - [i18next](https://www.i18next.com/) and [react-i18next](https://react.i18next.com/)
 - [Vitest](https://vitest.dev/) for unit tests
 - [Cloudflare Workers](https://workers.cloudflare.com/), [Resend](https://resend.com/) and [Turnstile](https://www.cloudflare.com/products/turnstile/) for the contact form
