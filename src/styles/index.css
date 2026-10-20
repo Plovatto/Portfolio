@@ -153,6 +153,57 @@ main {
   padding-block: clamp(4.5rem, 12vh, 6.5rem);
 }
 
+.section-divider {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  height: 1.5rem;
+  margin-block: -0.75rem;
+  pointer-events: none;
+}
+
+.section-divider-score {
+  flex: 1;
+  height: 1px;
+  background: repeating-linear-gradient(
+    90deg,
+    color-mix(in oklab, var(--violet) 35%, var(--border-strong)) 0 6px,
+    transparent 6px 11px
+  );
+}
+
+.section-divider-score:first-child {
+  transform: scaleX(-1);
+}
+
+.section-divider-tab {
+  display: flex;
+  gap: 0.45rem;
+}
+
+.section-divider-tab i {
+  width: 6px;
+  height: 6px;
+  border: 1px solid color-mix(in oklab, var(--violet) 55%, var(--border-strong));
+  border-radius: 50%;
+  background: var(--bg);
+}
+
+@media (max-width: 900px) {
+  .section-divider:has(+ .stack) {
+    margin-bottom: 1rem;
+  }
+}
+
+.section-head {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  width: fit-content;
+  margin-bottom: 2.5rem;
+}
+
 .chip {
   position: relative;
   isolation: isolate;
@@ -299,6 +350,81 @@ main {
   }
 }
 
+.reveal .rv {
+  opacity: 0;
+  transform: translateY(14px);
+  transition:
+    opacity 500ms var(--ease-out),
+    transform 500ms var(--ease-out);
+  transition-delay: calc(var(--i, 0) * 60ms);
+}
+
+.reveal .rv-fade {
+  opacity: 0;
+  transition: opacity 600ms var(--ease-out);
+  transition-delay: calc(var(--i, 0) * 60ms);
+}
+
+.reveal .rv-clip {
+  clip-path: inset(0 0 100% 0);
+  transform: translateY(0.25em);
+  transition:
+    clip-path 650ms var(--ease-in-out),
+    transform 650ms var(--ease-out);
+  transition-delay: calc(var(--i, 0) * 60ms);
+}
+
+.reveal .rv-scan {
+  clip-path: inset(0 100% 0 0);
+  transition: clip-path 800ms var(--ease-in-out);
+  transition-delay: calc(var(--i, 0) * 60ms);
+}
+
+.reveal .in.rv,
+.reveal .in .rv {
+  opacity: 1;
+  transform: none;
+}
+
+.reveal .in.rv-fade,
+.reveal .in .rv-fade {
+  opacity: 1;
+}
+
+.reveal .in.rv-clip,
+.reveal .in .rv-clip {
+  clip-path: inset(0 0 -0.3em 0);
+  transform: none;
+}
+
+.reveal .in.rv-scan,
+.reveal .in .rv-scan {
+  clip-path: inset(0 0 0 0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal .rv,
+  .reveal .rv-clip,
+  .reveal .rv-scan {
+    transform: none;
+    clip-path: none;
+    transition: opacity 200ms ease;
+    transition-delay: 0ms;
+  }
+
+  .reveal .rv-clip,
+  .reveal .rv-scan {
+    opacity: 0;
+  }
+
+  .reveal .in.rv-clip,
+  .reveal .in .rv-clip,
+  .reveal .in.rv-scan,
+  .reveal .in .rv-scan {
+    opacity: 1;
+  }
+}
+
 ::selection {
   background: color-mix(in oklab, var(--accent) 32%, transparent);
   color: var(--text);
@@ -337,6 +463,53 @@ button {
 @media (max-width: 420px) {
   .wrap {
     width: calc(100% - 2rem);
+  }
+}
+
+.section-head h2,
+.stack-copy h2 {
+  position: relative;
+}
+
+.section-head h2::after,
+.stack-copy h2::after {
+  content: '';
+  position: absolute;
+  bottom: -0.2em;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, var(--blue), var(--violet), var(--accent));
+  opacity: 0;
+  transform: scaleX(0);
+  transform-origin: left;
+}
+
+.reveal .section-head.in h2::after,
+.reveal .stack-copy.in h2::after {
+  animation: heading-current 1400ms var(--ease-out) 450ms both;
+}
+
+@keyframes heading-current {
+  0% {
+    opacity: 1;
+    transform: scaleX(0);
+  }
+  55% {
+    opacity: 1;
+    transform: scaleX(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scaleX(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal .section-head.in h2::after,
+  .reveal .stack-copy.in h2::after {
+    animation: none;
   }
 }
 
