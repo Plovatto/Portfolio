@@ -529,6 +529,10 @@ main {
   opacity: 1;
 }
 
+.reveal .seen.rv-fade {
+  opacity: 1;
+}
+
 .reveal .in.rv-clip,
 .reveal .in .rv-clip {
   clip-path: inset(0 0 -0.3em 0);

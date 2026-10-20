@@ -8,7 +8,7 @@ export function useReveal<T extends HTMLElement>() {
     if (!el) return
     const enter = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting) el.classList.add('in')
+        if (entry.isIntersecting) el.classList.add('in', 'seen')
       },
       { threshold: 0.12, rootMargin: '0px 0px -8% 0px' },
     )
