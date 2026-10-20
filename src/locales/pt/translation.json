@@ -149,7 +149,12 @@
       "title": "Próximo projeto",
       "description": "Este espaço já está reservado na placa para o que vem por aí."
     },
-    "xrayHintTouch": "Toque na imagem para ver o esquemático"
+    "xrayHintTouch": "Toque na imagem para ver o esquemático",
+    "run": "Rodar aqui",
+    "runLabel": "Pré-visualização ao vivo de {{name}}",
+    "reload": "recarregar",
+    "newTab": "abrir em nova aba",
+    "loading": "carregando…"
   },
   "stack": {
     "title": "Uma stack, quatro camadas",

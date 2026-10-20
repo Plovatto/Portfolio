@@ -27,6 +27,7 @@ export interface Project {
   name: string
   refdes: string
   image: ProjectImage
+  preview: string
   flip?: boolean
   cropImage?: boolean
   techs: readonly string[] | SplitTechs
@@ -48,6 +49,7 @@ export const PROJECTS: readonly Project[] = [
     name: 'SparkChat',
     refdes: 'U2',
     image: { name: 'sparkchat', width: 1280, height: 641 },
+    preview: 'https://plovatto.github.io/SparkChat/',
     techs: {
       client: ['React', 'TypeScript', 'libsodium', 'Socket.IO', 'Vite'],
       server: ['Node.js', 'Express', 'Turso', 'Cloudflare R2', 'Gemini'],
@@ -81,6 +83,7 @@ export const PROJECTS: readonly Project[] = [
     name: 'PetLand',
     refdes: 'U3',
     image: { name: 'petland', width: 1280, height: 800 },
+    preview: 'https://plovatto.github.io/PetLand/',
     flip: true,
     cropImage: true,
     techs: ['React', 'TypeScript', 'Tailwind', 'Motion', 'i18next', 'EmailJS'],
