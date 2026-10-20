@@ -312,7 +312,7 @@
 
 @media (pointer: coarse) and (max-width: 900px) {
   .xray {
-    cursor: pointer;
+    cursor: var(--cursor-pointer);
   }
 
   .xray-hint.is-pointer {

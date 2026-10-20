@@ -36,7 +36,7 @@
   border: 0;
   background: none;
   color: var(--faint);
-  cursor: pointer;
+  cursor: var(--cursor-pointer);
   transition: color 0.15s ease;
 }
 
@@ -313,7 +313,7 @@
   color: var(--faint);
   font: 600 0.72rem var(--f-mono);
   letter-spacing: 0.04em;
-  cursor: pointer;
+  cursor: var(--cursor-pointer);
   transition:
     color 0.15s ease,
     transform 160ms var(--ease-out);
