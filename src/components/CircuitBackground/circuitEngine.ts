@@ -165,6 +165,28 @@ function innerStyle(p: Palette): ChunkStyle {
   }
 }
 
+const LAYOUT_CHECK_MS = 700
+
+interface LayoutBox {
+  x: number
+  y: number
+  w: number
+  h: number
+}
+
+function layoutBox(el: HTMLElement): LayoutBox {
+  let x = 0
+  let y = 0
+  for (let node: HTMLElement | null = el; node; node = node.offsetParent as HTMLElement | null) {
+    x += node.offsetLeft
+    y += node.offsetTop
+  }
+  return { x, y, w: el.offsetWidth, h: el.offsetHeight }
+}
+
+const sameBox = (a: LayoutBox, b: LayoutBox) =>
+  Math.abs(a.x - b.x) < 1 && Math.abs(a.y - b.y) < 1 && a.w === b.w && a.h === b.h
+
 export class CircuitEngine {
   private readonly canvas: HTMLCanvasElement
   private readonly ctx: CanvasRenderingContext2D
@@ -212,7 +234,8 @@ export class CircuitEngine {
   private lastTheme: Theme | null = null
   private regenTimer: number | undefined
   private observer: ResizeObserver | null = null
-  private chipSizes = new Map<HTMLElement, { w: number; h: number }>()
+  private layoutBoxes = new Map<HTMLElement, LayoutBox>()
+  private layoutTimer = 0
   private running = false
   private pageScroll = 0
   private lowPower = false
@@ -251,6 +274,7 @@ export class CircuitEngine {
       this.generate()
       this.observer = new ResizeObserver(this.checkLayout)
       this.observeLayout()
+      this.layoutTimer = window.setInterval(this.checkLayout, LAYOUT_CHECK_MS)
       this.raf = requestAnimationFrame(this.frame)
     })
   }
@@ -259,6 +283,7 @@ export class CircuitEngine {
     this.running = false
     cancelAnimationFrame(this.raf)
     window.clearTimeout(this.regenTimer)
+    window.clearInterval(this.layoutTimer)
     this.observer?.disconnect()
     window.removeEventListener('scroll', this.handleScroll)
     window.removeEventListener('resize', this.handleResize)
@@ -319,9 +344,11 @@ export class CircuitEngine {
     })
 
     this.cards = board.chips.map(buildCardVisual)
-    this.chipSizes = new Map(
-      board.chips.map(({ spec }) => [spec.el, { w: spec.el.offsetWidth, h: spec.el.offsetHeight }]),
-    )
+    const tracked = [
+      ...board.chips.map(({ spec }) => spec.el),
+      ...document.querySelectorAll<HTMLElement>('[data-quiet]'),
+    ]
+    this.layoutBoxes = new Map(tracked.map((el) => [el, layoutBox(el)]))
     this.observeLayout()
     for (const card of this.cards) {
       if (this.powered.has(card.chip.spec.ref)) card.glow = CARD.baseGlow
@@ -342,15 +369,16 @@ export class CircuitEngine {
     if (!observer) return
     observer.disconnect()
     observer.observe(document.body)
-    for (const el of this.chipSizes.keys()) observer.observe(el)
+    for (const el of this.layoutBoxes.keys()) observer.observe(el)
   }
 
   private checkLayout = () => {
     const root = document.documentElement
-    const chipResized = [...this.chipSizes].some(
-      ([el, size]) => el.isConnected && (el.offsetWidth !== size.w || el.offsetHeight !== size.h),
+    if (document.hidden || !this.board) return
+    const moved = [...this.layoutBoxes].some(
+      ([el, box]) => el.isConnected && !sameBox(layoutBox(el), box),
     )
-    if (chipResized || root.clientWidth !== this.docW || root.scrollHeight !== this.docH) {
+    if (moved || root.clientWidth !== this.docW || root.scrollHeight !== this.docH) {
       this.scheduleRegen()
     }
   }
