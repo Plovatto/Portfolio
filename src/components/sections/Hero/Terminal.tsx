@@ -35,6 +35,7 @@ export function Terminal({ powered }: TerminalProps) {
   const shownRef = useRef<'boot' | TerminalCommand | null>(null)
   const interruptedRef = useRef(false)
   const whoamiTimerRef = useRef(0)
+  const scrollTimerRef = useRef(0)
   const languageRef = useRef(i18n.resolvedLanguage)
   const [active, setActive] = useState<TerminalCommand | null>(null)
 
@@ -75,7 +76,10 @@ export function Terminal({ powered }: TerminalProps) {
 
   const run = useCallback(
     async (name: TerminalCommand) => {
-      if (busyRef.current) return
+      if (busyRef.current && shownRef.current === name) return
+      clearTimeout(whoamiTimerRef.current)
+      clearTimeout(scrollTimerRef.current)
+      interruptedRef.current = false
       setActive(name)
       shownRef.current = name
       const finished = await type(
@@ -86,7 +90,7 @@ export function Terminal({ powered }: TerminalProps) {
       )
       const target = COMMAND_TARGETS[name]
       if (finished && target) {
-        window.setTimeout(() => {
+        scrollTimerRef.current = window.setTimeout(() => {
           document.getElementById(target)?.scrollIntoView({ behavior: reduced ? 'auto' : 'smooth' })
         }, SCROLL_AFTER_MS)
       }
@@ -94,7 +98,7 @@ export function Terminal({ powered }: TerminalProps) {
     [type, t, reduced],
   )
 
-  const boot = useEffectEvent(async (onWhoami: (run: () => void) => void) => {
+  const boot = useEffectEvent(async () => {
     shownRef.current = 'boot'
     const finished = await type(
       'npm run dev',
@@ -102,16 +106,15 @@ export function Terminal({ powered }: TerminalProps) {
       TYPE_BOOT_COMMAND_MS,
       TYPE_BOOT_OUTPUT_MS,
     )
-    if (finished) onWhoami(() => run('whoami'))
+    if (finished && shownRef.current === 'boot') {
+      whoamiTimerRef.current = window.setTimeout(() => run('whoami'), WHOAMI_AFTER_BOOT_MS)
+    }
   })
 
   useEffect(() => {
     if (!powered) return
-    let timer = 0
-    boot((whoami) => {
-      timer = window.setTimeout(whoami, WHOAMI_AFTER_BOOT_MS)
-    })
-    return () => clearTimeout(timer)
+    boot()
+    return () => clearTimeout(whoamiTimerRef.current)
   }, [powered])
 
   useEffect(() => {
@@ -125,6 +128,7 @@ export function Terminal({ powered }: TerminalProps) {
       i18n.off('languageChanged', stop)
       abortRef.current?.abort()
       clearTimeout(whoamiTimerRef.current)
+      clearTimeout(scrollTimerRef.current)
     }
   }, [i18n])
 
