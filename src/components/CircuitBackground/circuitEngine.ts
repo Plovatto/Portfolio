@@ -4,6 +4,7 @@ import {
   CARD,
   FLASHLIGHT,
   FRAME_BUDGET,
+  MOTION,
   HUE,
   INNER,
   PALETTE,
@@ -150,6 +151,12 @@ function renderHalo(spec: ChipSpec, palette: Palette): HTMLCanvasElement {
   ctx.beginPath()
   ctx.roundRect(pad, pad, w, h, spec.radius)
   ctx.fill()
+  ctx.filter = 'none'
+  ctx.shadowBlur = 0
+  ctx.globalCompositeOperation = 'destination-out'
+  ctx.beginPath()
+  ctx.roundRect(pad, pad, w, h, spec.radius)
+  ctx.fill()
   return canvas
 }
 
@@ -246,6 +253,7 @@ export class CircuitEngine {
   private last = 0
   private dirty = true
   private lastScroll = -1
+  private motion = 1
   private lastTheme: Theme | null = null
   private regenTimer: number | undefined
   private observer: ResizeObserver | null = null
@@ -532,6 +540,7 @@ export class CircuitEngine {
 
     const theme = this.getTheme()
     const scrollY = this.boardScroll()
+    this.trackMotion(scrollY, interval)
     if (theme !== this.lastTheme || scrollY !== this.lastScroll) this.dirty = true
     this.lastTheme = theme
     this.lastScroll = scrollY
@@ -540,6 +549,14 @@ export class CircuitEngine {
     if (this.reduced && !this.dirty) return
     this.dirty = false
     this.draw(now, dt, scrollY, theme)
+  }
+
+  private trackMotion(scrollY: number, interval: number) {
+    if (this.lastScroll < 0 || interval <= 0) return
+    const speed = Math.abs(scrollY - this.lastScroll) / (interval / 1000)
+    const target = clamp(1 - (speed - MOTION.calm) / (MOTION.fast - MOTION.calm), MOTION.min, 1)
+    const rate = target < this.motion ? MOTION.dimRate : MOTION.restoreRate
+    this.motion += (target - this.motion) * (1 - Math.exp((-rate * Math.min(interval, 100)) / 1000))
   }
 
   private draw(now: number, dt: number, scrollY: number, theme: Theme) {
@@ -645,7 +662,8 @@ export class CircuitEngine {
       card.glow += (target - card.glow) * ease
       card.flash *= decay
       card.shown += ((isShown(spec.el) ? 1 : 0) - card.shown) * ease
-      const alpha = Math.min(1, card.glow + card.flash * 0.55) * card.shown * palette.halo
+      const alpha =
+        Math.min(1, card.glow + card.flash * 0.55) * card.shown * this.motion * palette.halo
       if (alpha < 0.01 || spec.bottom + pad < top || spec.top - pad > bottom) continue
       if (!card.halo || card.haloTheme !== theme) {
         card.halo = renderHalo(spec, palette)
