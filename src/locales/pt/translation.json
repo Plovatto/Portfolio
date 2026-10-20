@@ -26,7 +26,73 @@
   },
   "statusBar": {
     "label": "Barra de status",
-    "build": "✓ build passando"
+    "build": "✓ build passando",
+    "writing": "⟳ escrevendo {{file}}",
+    "compiling": "⟳ compilando",
+    "ready": "✓ pronto em {{ms}} ms"
+  },
+  "hero": {
+    "role": "Desenvolvedora full stack",
+    "lede": "Desenvolvendo e evoluindo sistemas web reais, da interface ao banco de dados, com foco em soluções práticas e entregas bem-feitas.",
+    "viewProjects": "Ver projetos",
+    "getInTouch": "Entrar em contato",
+    "codeFile": "src/inicio.tsx",
+    "closeCode": "fechar código",
+    "codeComponent": "Inicio"
+  },
+  "terminal": {
+    "title": "terminal",
+    "badge": "Sistema em produção",
+    "prompt": "visitante@portfolio:~$",
+    "commands": {
+      "whoami": "whoami",
+      "skills": "skills --list",
+      "projects": "projetos",
+      "git": "git log",
+      "contact": "contato"
+    },
+    "typed": {
+      "git": "git log --oneline"
+    },
+    "boot": {
+      "ready": "pronto em {{ms}} ms",
+      "board": "placa",
+      "boardValue": "ligada",
+      "name": "nome",
+      "nameValue": "energizado"
+    },
+    "whoami": {
+      "name": "nome",
+      "role": "cargo",
+      "stack": "stack",
+      "location": "local",
+      "locationValue": "Brasil"
+    },
+    "skills": {
+      "interface": "interface",
+      "server": "servidor",
+      "data": "dados",
+      "infra": "infra"
+    },
+    "projects": {
+      "sparkchat": "chat em tempo real com E2E",
+      "petland": "landing page animada, PT e EN",
+      "opening": "abrindo projetos.tsx..."
+    },
+    "contact": {
+      "channels": "canais",
+      "channelsValue": "formulário, e-mail, LinkedIn",
+      "reply": "resposta",
+      "replyValue": "em até 1 dia útil",
+      "opening": "abrindo contato.tsx..."
+    },
+    "git": {
+      "fullStack": "full stack PJ, CONSEPRO",
+      "english": "inglês, KNN",
+      "internship": "estágio, Projeto CONSEPRO",
+      "degree": "Sistemas de Informação, FACCAT",
+      "technical": "técnico em informática, CIMOL"
+    }
   },
   "footer": {
     "copyright": "© {{year}} Pandora Becker Lovatto"
