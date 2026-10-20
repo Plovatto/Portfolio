@@ -106,7 +106,7 @@
     "client": "Client",
     "server": "Server",
     "sparkchat": {
-      "description": "Real-time chat that only the people talking can read: messages and files are encrypted right in the browser. It has rooms, groups, audio, link previews and an AI assistant.",
+      "description": "A real-time chat where not even the server can read the conversation: messages and attachments are end-to-end encrypted right in the browser. Rooms, groups, voice messages, link previews and SparkAI, an assistant that answers inside the chat.",
       "imageAlt": "SparkChat on a desktop screen",
       "links": {
         "app": "Open the app",
@@ -128,7 +128,7 @@
       }
     },
     "petland": {
-      "description": "Landing page for a fictional pet shop, built to explore animation, smooth scrolling, a carousel and a two-language site, with a working contact form and automatic deploys.",
+      "description": "A landing page for a fictional pet shop, built as an interaction showcase: scroll animations, a carousel, Portuguese and English versions and a contact form that actually sends, deployed automatically on every update.",
       "imageAlt": "Top of the PetLand landing page",
       "links": {
         "site": "Open the site",
@@ -148,7 +148,7 @@
     },
     "next": {
       "title": "Next project",
-      "description": "This spot on the board is already reserved for what comes next."
+      "description": "A new chip is being soldered. This spot on the board is already reserved for the next project."
     },
     "xrayHintTouch": "Tap the image to see the schematic",
     "run": "Run here",
