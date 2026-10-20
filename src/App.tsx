@@ -5,9 +5,11 @@ import { ActivityBar } from './components/layout/ActivityBar'
 import { EditorTabs } from './components/layout/EditorTabs'
 import { SiteFooter } from './components/layout/SiteFooter'
 import { StatusBar } from './components/layout/StatusBar'
+import { SectionDivider } from './components/ui/SectionDivider'
 import type { OpeningStage } from './components/sections/Hero/CodeIntro'
 import { Hero } from './components/sections/Hero/Hero'
 import { BOOT_MS } from './components/sections/Hero/Terminal'
+import { Projects } from './components/sections/Projects/Projects'
 import { PROFILE } from './constants/profile'
 import { useActiveSection } from './hooks/useActiveSection'
 import './components/layout/layout.css'
@@ -22,6 +24,8 @@ const Page = memo(function Page({ powered, onStage, onCompiled }: PageProps) {
   return (
     <main id="main" tabIndex={-1}>
       <Hero powered={powered} onStage={onStage} onCompiled={onCompiled} />
+      <SectionDivider />
+      <Projects />
       <SiteFooter />
     </main>
   )

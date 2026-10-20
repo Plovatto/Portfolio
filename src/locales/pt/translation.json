@@ -94,6 +94,61 @@
       "technical": "técnico em informática, CIMOL"
     }
   },
+  "projects": {
+    "title": "Projetos",
+    "lede": "Passe o mouse sobre as imagens: a lente mostra o esquemático por trás de cada produto.",
+    "live": "no ar",
+    "building": "em construção",
+    "xrayHint": "Lente de raio-X: o esquemático do produto",
+    "client": "Cliente",
+    "server": "Servidor",
+    "sparkchat": {
+      "description": "Chat em tempo real em que só quem conversa consegue ler: mensagens e arquivos são criptografados no próprio navegador. Tem salas, grupos, áudio, prévia de links e uma assistente com IA.",
+      "imageAlt": "Tela do SparkChat no computador",
+      "links": {
+        "app": "Abrir o app",
+        "client": "Código do cliente",
+        "api": "Código da API"
+      },
+      "schematic": {
+        "client": "Cliente",
+        "clientDetail": "React + E2E",
+        "socket": "Socket",
+        "socketDetail": "tempo real",
+        "api": "API",
+        "apiDetail": "Express + Zod",
+        "database": "Turso",
+        "databaseDetail": "banco de dados",
+        "files": "R2",
+        "filesDetail": "arquivos",
+        "note": ["E2E: a chave nunca", "sai do navegador"]
+      }
+    },
+    "petland": {
+      "description": "Landing page de um petshop fictício, feita para explorar animação, rolagem suave, carrossel e site em dois idiomas, com formulário de contato funcionando e deploy automático.",
+      "imageAlt": "Topo da landing page PetLand",
+      "links": {
+        "site": "Abrir o site",
+        "code": "Ver o código"
+      },
+      "schematic": {
+        "sections": "Seções",
+        "sectionsDetail": "hero, serviços",
+        "motion": "Motion",
+        "motionDetail": "Lenis + Swiper",
+        "contact": "Contato",
+        "contactDetail": "EmailJS",
+        "i18n": "i18n",
+        "i18nDetail": "PT e EN",
+        "note": ["Deploy automático", "no GitHub Pages"]
+      }
+    },
+    "next": {
+      "title": "Próximo projeto",
+      "description": "Este espaço já está reservado na placa para o que vem por aí."
+    },
+    "xrayHintTouch": "Toque na imagem para ver o esquemático"
+  },
   "footer": {
     "copyright": "© {{year}} Pandora Becker Lovatto"
   }
