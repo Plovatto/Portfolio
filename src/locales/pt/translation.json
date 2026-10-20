@@ -184,12 +184,25 @@
           "Desenvolvimento de funcionalidades em React, Node.js/Express, JavaScript/TypeScript e MySQL, passando pelo front-end, pelo back-end e pelo banco de dados.",
           "Ferramentas administrativas, relatórios, melhorias de interface e recursos com dados atualizados em tempo real."
         ],
-        "diff": ["ferramentas administrativas", "relatórios", "tempo real"]
+        "diff": ["ferramentas administrativas", "relatórios", "tempo real"],
+        "show": [
+          "@@ cargo @@",
+          "- estagiária de desenvolvimento de software",
+          "+ desenvolvedora full stack (PJ)",
+          "@@ foco @@",
+          "+ manutenção e evolução do sistema de estacionamento rotativo",
+          "+ ferramentas administrativas e relatórios",
+          "+ melhorias de interface",
+          "+ recursos com dados atualizados em tempo real",
+          "@@ stack @@",
+          "  React, Node.js/Express, JavaScript/TypeScript, MySQL"
+        ]
       },
       "english": {
         "date": "abr 2025, em andamento",
         "title": "Inglês",
-        "org": "KNN Idiomas"
+        "org": "KNN Idiomas",
+        "show": ["@@ idiomas @@", "+ inglês: básico/intermediário, em desenvolvimento"]
       },
       "internship": {
         "date": "mar 2024, fev 2026",
@@ -198,20 +211,46 @@
         "items": [
           "Desenvolvimento, testes e suporte de um sistema em produção, com autonomia crescente no front, no back e no banco."
         ],
-        "diff": ["React", "Node.js", "MySQL"]
+        "diff": ["React", "Node.js", "MySQL"],
+        "show": [
+          "@@ cargo @@",
+          "- estudante",
+          "+ estagiária de desenvolvimento de software",
+          "@@ rotina @@",
+          "+ desenvolvimento, manutenção, testes e suporte de um sistema em produção",
+          "+ publicação de alterações",
+          "+ autonomia crescente no front-end, no back-end e no banco de dados",
+          "@@ stack @@",
+          "+ React",
+          "+ Node.js",
+          "+ MySQL"
+        ]
       },
       "degree": {
         "date": "2024, em andamento",
         "title": "Bacharelado em Sistemas de Informação",
-        "org": "FACCAT, Faculdades Integradas de Taquara"
+        "org": "FACCAT, Faculdades Integradas de Taquara",
+        "show": [
+          "@@ formação @@",
+          "  técnico em informática",
+          "+ bacharelado em Sistemas de Informação, em andamento"
+        ]
       },
       "technical": {
         "date": "2021, 2024",
         "title": "Técnico em Informática integrado ao ensino médio",
         "org": "Escola Técnica Estadual Monteiro Lobato, CIMOL",
-        "diff": ["lógica de programação"]
+        "diff": ["lógica de programação"],
+        "show": [
+          "@@ formação @@",
+          "+ técnico em informática integrado ao ensino médio",
+          "+ lógica de programação"
+        ]
       }
-    }
+    },
+    "show": "git show",
+    "showLabel": "Detalhes do commit {{hash}}",
+    "file": "carreira.md"
   },
   "contact": {
     "title": "Vamos conversar",
@@ -260,5 +299,8 @@
   },
   "footer": {
     "copyright": "© {{year}} Pandora Becker Lovatto"
+  },
+  "window": {
+    "close": "fechar"
   }
 }

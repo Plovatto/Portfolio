@@ -1,0 +1,235 @@
+html:has(.window[open]) {
+  overflow: hidden;
+}
+
+.window {
+  max-width: none;
+  max-height: none;
+  margin: auto;
+  padding: 0;
+  overflow: visible;
+  border: 0;
+  background: transparent;
+  color: var(--text);
+}
+
+.window::backdrop {
+  background: rgb(4 3 16 / 0.62);
+  backdrop-filter: blur(3px);
+}
+
+.window[open] {
+  animation: window-in 220ms var(--ease-out);
+}
+
+.window[open]::backdrop {
+  animation: window-backdrop-in 220ms ease;
+}
+
+@keyframes window-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.97);
+  }
+}
+
+@keyframes window-backdrop-in {
+  from {
+    opacity: 0;
+  }
+}
+
+.window-frame {
+  display: flex;
+  flex-direction: column;
+  width: min(44rem, calc(100vw - 2rem));
+  max-height: min(44rem, calc(100dvh - 2rem));
+  overflow: hidden;
+  border: 1px solid var(--border-strong);
+  border-radius: 12px;
+  background: var(--code);
+  box-shadow: 0 40px 80px -30px rgb(0 0 0 / 0.6);
+}
+
+.window-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  padding: 0.55rem 0.6rem 0.55rem 1rem;
+  border-bottom: 1px solid var(--border);
+  background: var(--panel);
+  color: var(--muted);
+  font: 500 0.78rem var(--f-mono);
+}
+
+.window-dots {
+  display: flex;
+  flex-shrink: 0;
+  gap: 0.4rem;
+}
+
+.window-dots i {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--led-off);
+}
+
+.window-title {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.window-prompt {
+  color: var(--accent);
+}
+
+.window-actions {
+  display: flex;
+  flex-shrink: 0;
+  gap: 0.4rem;
+}
+
+.window-button {
+  padding: 0.3rem 0.65rem;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: transparent;
+  color: var(--muted);
+  font: inherit;
+  text-decoration: none;
+  transition:
+    color 0.15s ease,
+    border-color 0.15s ease,
+    transform 120ms var(--ease-out);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .window-button:hover {
+    border-color: var(--border-strong);
+    color: var(--text);
+  }
+}
+
+.window-button:active {
+  transform: scale(0.97);
+}
+
+.window-body {
+  min-height: 0;
+  overflow: auto;
+}
+
+.git-show {
+  padding: 1.1rem 1.3rem 1.4rem;
+  font: 400 0.84rem / 1.7 var(--f-mono);
+}
+
+.git-show-meta {
+  color: var(--muted);
+}
+
+.git-show-hash {
+  color: var(--signal);
+}
+
+.git-show-ref {
+  color: var(--accent);
+}
+
+.git-show-message {
+  margin-top: 0.9rem;
+  padding-left: 2rem;
+  color: var(--text);
+  font-weight: 600;
+}
+
+.git-show-message.is-org {
+  margin-top: 0;
+  color: var(--muted);
+  font-weight: 400;
+}
+
+.git-show-file {
+  margin-top: 1.1rem;
+  color: var(--text);
+  font-weight: 600;
+}
+
+.git-show-diff {
+  margin-top: 0.3rem;
+  list-style: none;
+}
+
+.git-show-diff li {
+  padding: 0 0.6rem;
+  border-radius: 4px;
+  white-space: pre-wrap;
+  animation: diff-in 320ms var(--ease-out) both;
+  animation-delay: calc(var(--i, 0) * 40ms + 120ms);
+}
+
+.git-show-diff .is-hunk {
+  color: var(--signal);
+}
+
+.git-show-diff .is-hunk:not(:first-child) {
+  margin-top: 0.45rem;
+}
+
+.git-show-diff .is-add {
+  background: color-mix(in oklab, var(--add) 12%, transparent);
+  color: var(--add);
+}
+
+.git-show-diff .is-del {
+  background: color-mix(in oklab, var(--accent) 10%, transparent);
+  color: var(--accent);
+}
+
+.git-show-diff .is-ctx {
+  color: var(--muted);
+}
+
+@keyframes diff-in {
+  from {
+    opacity: 0;
+    transform: translateX(-6px);
+  }
+}
+
+@media (max-width: 600px) {
+  .window-frame {
+    width: calc(100vw - 1.5rem);
+  }
+
+  .window-browser .window-frame {
+    width: 100vw;
+    height: 100dvh;
+    border-radius: 0;
+  }
+
+  .window-browser .window-actions button:first-child {
+    display: none;
+  }
+
+  .window-bar {
+    gap: 0.5rem;
+    padding-left: 0.75rem;
+  }
+
+  .window-dots {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .window[open],
+  .window[open]::backdrop,
+  .git-show-diff li {
+    animation: none;
+  }
+}
