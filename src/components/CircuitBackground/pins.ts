@@ -25,11 +25,14 @@ export function toBoardScroll(scrollY: number, pins: PinRange[]): number {
   return scrollY - consumed
 }
 
-export function pinShift(el: Element, pins: PinRange[]): number {
-  let shift = 0
+export function boardOffset(el: Element, scrollY: number, pins: PinRange[]): number {
+  let offset = scrollY
   for (const pin of pins) {
-    const follows = pin.el.compareDocumentPosition(el) & Node.DOCUMENT_POSITION_FOLLOWING
-    if (follows && !pin.el.contains(el)) shift += pin.span
+    if (pin.el.contains(el)) {
+      offset -= Math.min(Math.max(scrollY - pin.start, 0), pin.span)
+    } else if (pin.el.compareDocumentPosition(el) & Node.DOCUMENT_POSITION_FOLLOWING) {
+      offset -= pin.span
+    }
   }
-  return shift
+  return offset
 }

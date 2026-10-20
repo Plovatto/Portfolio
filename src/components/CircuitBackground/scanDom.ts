@@ -1,4 +1,4 @@
-import { pinShift, toBoardScroll } from './pins'
+import { boardOffset } from './pins'
 import type { PinRange } from './pins'
 import type { ChipSpec, PinLayout, Rect } from './types'
 
@@ -6,7 +6,7 @@ const PIN_LAYOUTS: PinLayout[] = ['lr', 'tb', 'all', 'none']
 
 function documentRect(el: Element, pins: PinRange[]): Rect {
   const r = el.getBoundingClientRect()
-  const y = toBoardScroll(window.scrollY, pins) - pinShift(el, pins)
+  const y = boardOffset(el, window.scrollY, pins)
   return {
     left: r.left + window.scrollX,
     top: r.top + y,
