@@ -26,11 +26,5 @@ export function CircuitBackground({ label = '', active = true }: CircuitBackgrou
     return () => engine.stop()
   }, [label, active])
 
-  return (
-    <canvas
-      ref={canvasRef}
-      aria-hidden="true"
-      className="pointer-events-none fixed inset-0 z-0 block h-full w-full"
-    />
-  )
+  return <canvas ref={canvasRef} aria-hidden="true" className="circuit-canvas" />
 }
