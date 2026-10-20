@@ -3,11 +3,34 @@
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <meta
       name="description"
       content="Pandora Lovatto, desenvolvedora full stack. Sistemas web reais, da interface ao banco de dados."
     />
+    <meta name="theme-color" content="#f6f6fb" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#07061a" media="(prefers-color-scheme: dark)" />
+    <meta name="author" content="Pandora Becker Lovatto" />
+    <link rel="canonical" href="https://plovatto.github.io/portifolio/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="pt_BR" />
+    <meta property="og:locale:alternate" content="en_US" />
+    <meta property="og:site_name" content="Pandora Lovatto" />
+    <meta property="og:title" content="Pandora Lovatto · Desenvolvedora full stack" />
+    <meta
+      property="og:description"
+      content="Sistemas web reais, da interface ao banco de dados. React, Node.js, TypeScript e MySQL."
+    />
+    <meta property="og:url" content="https://plovatto.github.io/portifolio/" />
+    <meta property="og:image" content="https://plovatto.github.io/portifolio/og.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta
+      property="og:image:alt"
+      content="Portfólio de Pandora Lovatto em forma de placa de circuito"
+    />
+    <meta name="twitter:card" content="summary_large_image" />
     <title>Pandora Lovatto · Desenvolvedora full stack</title>
     <script>
       try {
@@ -20,8 +43,30 @@
               : 'light'
       } catch {}
     </script>
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Person",
+        "name": "Pandora Becker Lovatto",
+        "alternateName": "Pandora Lovatto",
+        "jobTitle": "Desenvolvedora full stack",
+        "url": "https://plovatto.github.io/portifolio/",
+        "image": "https://plovatto.github.io/portifolio/og.jpg",
+        "knowsAbout": ["React", "JavaScript", "TypeScript", "Node.js", "Express", "MySQL", "SQL"],
+        "sameAs": [
+          "https://github.com/Plovatto",
+          "https://www.linkedin.com/in/pandora-becker-lovatto-877169290"
+        ]
+      }
+    </script>
   </head>
   <body>
+    <noscript>
+      <p style="padding: 2rem; font-family: system-ui, sans-serif">
+        Este portfólio precisa de JavaScript. / This portfolio needs JavaScript.
+        <a href="https://github.com/Plovatto">GitHub</a>
+      </p>
+    </noscript>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
