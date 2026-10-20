@@ -74,13 +74,12 @@ Copy `.env.example` to `.env.local` and set `VITE_CONTACT_ENDPOINT` (the contact
 
 The site is published to GitHub Pages at `https://plovatto.github.io/portifolio/` (production builds use the `/portifolio/` base; override it with `VITE_BASE`). Fonts and project images are self-hosted, so the page makes no third-party requests until the contact form is used.
 
-| Workflow            | Runs on                                    | Does                                                                                            |
-| ------------------- | ------------------------------------------ | ----------------------------------------------------------------------------------------------- |
-| `ci.yml`            | pull requests and pushes to other branches | format check, lint, typecheck, tests and build for the site; typecheck and tests for the worker |
-| `deploy-site.yml`   | pushes to `main` (outside `worker/`)       | lint, tests, build and deploy to GitHub Pages                                                   |
-| `deploy-worker.yml` | pushes to `main` that touch `worker/`      | typecheck, tests and `wrangler deploy`                                                          |
-
-Dependabot opens monthly grouped updates for both packages and the actions.
+| Workflow            | Runs on                               | Does                                                                           |
+| ------------------- | ------------------------------------- | ------------------------------------------------------------------------------ |
+| `ci.yml`            | pull requests and pushes to `main`    | format check, lint, typecheck and build for the site; typecheck for the worker |
+| `tests.yml`         | pull requests and pushes to `main`    | unit tests for the site and the worker                                         |
+| `deploy-site.yml`   | pushes to `main` (outside `worker/`)  | lint, tests, build and deploy to GitHub Pages                                  |
+| `deploy-worker.yml` | pushes to `main` that touch `worker/` | typecheck, tests and `wrangler deploy`                                         |
 
 One-time setup in the GitHub repository:
 
