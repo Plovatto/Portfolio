@@ -149,6 +149,22 @@
     },
     "xrayHintTouch": "Tap the image to see the schematic"
   },
+  "stack": {
+    "title": "One stack, four layers",
+    "lede": "Every web application is made of layers that work together.",
+    "layers": {
+      "interface": "Interface",
+      "server": "Server",
+      "data": "Data",
+      "infra": "Infrastructure"
+    },
+    "plates": {
+      "interface": "INTERFACE",
+      "server": "SERVER",
+      "data": "DATA",
+      "infra": "INFRA"
+    }
+  },
   "footer": {
     "copyright": "© {{year}} Pandora Becker Lovatto"
   }
