@@ -211,6 +211,51 @@
       }
     }
   },
+  "contact": {
+    "title": "Let's talk",
+    "lede": "Tell me about your idea or what you need, and I'll reply by e-mail.",
+    "fields": {
+      "name": "Your name",
+      "email": "Your e-mail",
+      "message": "Message"
+    },
+    "send": "Send message",
+    "sending": "Sending",
+    "retry": "Try again",
+    "success": {
+      "title": "Message sent",
+      "body": "Thanks, {{name}}! I'll reply at {{email}}.",
+      "again": "Send another message"
+    },
+    "preview": "Request preview",
+    "endpoint": "POST /contact",
+    "payloadKeys": {
+      "name": "name",
+      "email": "email",
+      "message": "message"
+    },
+    "status": {
+      "idle": "waiting",
+      "sending": "sending",
+      "ok": "200 OK",
+      "error": "error"
+    },
+    "steps": {
+      "validate": "Validating the fields",
+      "verify": "Checking it's not a robot",
+      "send": "Sending through the server",
+      "delivered": "Delivered",
+      "deliveredIn": "Delivered in {{ms}} ms"
+    },
+    "errors": {
+      "name": "Write your name.",
+      "email": "Check the e-mail.",
+      "message": "Write a message.",
+      "send": "Couldn't send right now. Your message is still here; try again in a moment.",
+      "offline": "You're offline. Check your connection and try again; your message is still here.",
+      "verify": "I couldn't confirm you're not a robot. Please try again."
+    }
+  },
   "footer": {
     "copyright": "© {{year}} Pandora Becker Lovatto"
   }

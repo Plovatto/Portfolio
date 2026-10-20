@@ -211,6 +211,51 @@
       }
     }
   },
+  "contact": {
+    "title": "Vamos conversar",
+    "lede": "Me conte sua ideia ou o que você precisa, e eu respondo por e-mail.",
+    "fields": {
+      "name": "Seu nome",
+      "email": "Seu e-mail",
+      "message": "Mensagem"
+    },
+    "send": "Enviar mensagem",
+    "sending": "Enviando",
+    "retry": "Tentar de novo",
+    "success": {
+      "title": "Mensagem enviada",
+      "body": "Obrigada, {{name}}! Vou responder no e-mail {{email}}.",
+      "again": "Enviar outra mensagem"
+    },
+    "preview": "Prévia da requisição",
+    "endpoint": "POST /contato",
+    "payloadKeys": {
+      "name": "nome",
+      "email": "email",
+      "message": "mensagem"
+    },
+    "status": {
+      "idle": "aguardando",
+      "sending": "enviando",
+      "ok": "200 OK",
+      "error": "erro"
+    },
+    "steps": {
+      "validate": "Validando os campos",
+      "verify": "Verificando que não é robô",
+      "send": "Enviando pelo servidor",
+      "delivered": "Entregue",
+      "deliveredIn": "Entregue em {{ms}} ms"
+    },
+    "errors": {
+      "name": "Escreva seu nome.",
+      "email": "Confira o e-mail.",
+      "message": "Escreva uma mensagem.",
+      "send": "Não foi possível enviar agora. Sua mensagem continua aqui; tente de novo em instantes.",
+      "offline": "Você está sem conexão. Confira a internet e tente de novo; sua mensagem continua aqui.",
+      "verify": "Não consegui confirmar que você não é um robô. Tente de novo."
+    }
+  },
   "footer": {
     "copyright": "© {{year}} Pandora Becker Lovatto"
   }
