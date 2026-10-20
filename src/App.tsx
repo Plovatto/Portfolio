@@ -6,6 +6,7 @@ import { EditorTabs } from './components/layout/EditorTabs'
 import { SiteFooter } from './components/layout/SiteFooter'
 import { StatusBar } from './components/layout/StatusBar'
 import { SectionDivider } from './components/ui/SectionDivider'
+import { Experience } from './components/sections/Experience/Experience'
 import type { OpeningStage } from './components/sections/Hero/CodeIntro'
 import { Hero } from './components/sections/Hero/Hero'
 import { BOOT_MS } from './components/sections/Hero/Terminal'
@@ -29,6 +30,8 @@ const Page = memo(function Page({ powered, onStage, onCompiled }: PageProps) {
       <Projects />
       <SectionDivider />
       <Stack />
+      <SectionDivider />
+      <Experience />
       <SiteFooter />
     </main>
   )

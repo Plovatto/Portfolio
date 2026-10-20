@@ -165,6 +165,52 @@
       "infra": "INFRA"
     }
   },
+  "experience": {
+    "title": "git log --experiência",
+    "lede": "Trabalho no ramo principal, estudos correndo em paralelo.",
+    "graph": "commit graph",
+    "mainLane": "main: trabalho",
+    "studiesLane": "estudos",
+    "initialCommit": "commit inicial",
+    "commits": {
+      "fullStack": {
+        "date": "fev 2026, atual",
+        "title": "Desenvolvedora full stack (PJ)",
+        "org": "CONSEPRO Taquara",
+        "items": [
+          "Continuidade do trabalho iniciado no estágio, agora com foco na manutenção e evolução do sistema de estacionamento rotativo da cidade.",
+          "Desenvolvimento de funcionalidades em React, Node.js/Express, JavaScript/TypeScript e MySQL, passando pelo front-end, pelo back-end e pelo banco de dados.",
+          "Ferramentas administrativas, relatórios, melhorias de interface e recursos com dados atualizados em tempo real."
+        ],
+        "diff": ["ferramentas administrativas", "relatórios", "tempo real"]
+      },
+      "english": {
+        "date": "abr 2025, em andamento",
+        "title": "Inglês",
+        "org": "KNN Idiomas"
+      },
+      "internship": {
+        "date": "mar 2024, fev 2026",
+        "title": "Estagiária de desenvolvimento de software",
+        "org": "FACCAT, Projeto CONSEPRO",
+        "items": [
+          "Desenvolvimento, testes e suporte de um sistema em produção, com autonomia crescente no front, no back e no banco."
+        ],
+        "diff": ["React", "Node.js", "MySQL"]
+      },
+      "degree": {
+        "date": "2024, em andamento",
+        "title": "Bacharelado em Sistemas de Informação",
+        "org": "FACCAT, Faculdades Integradas de Taquara"
+      },
+      "technical": {
+        "date": "2021, 2024",
+        "title": "Técnico em Informática integrado ao ensino médio",
+        "org": "Escola Técnica Estadual Monteiro Lobato, CIMOL",
+        "diff": ["lógica de programação"]
+      }
+    }
+  },
   "footer": {
     "copyright": "© {{year}} Pandora Becker Lovatto"
   }

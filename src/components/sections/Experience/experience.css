@@ -1,0 +1,270 @@
+.section-head .is-code {
+  font-family: var(--f-mono);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+.gitlog {
+  padding: 1.75rem 1.75rem 1rem;
+}
+
+.gitlog-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 0.5rem;
+  padding-bottom: 1.1rem;
+  border-bottom: 1px solid var(--border);
+  color: var(--faint);
+  font: 500 0.78rem var(--f-mono);
+}
+
+.gitlog-lane {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.gitlog-lane i {
+  width: 14px;
+  height: 2px;
+  border-radius: 2px;
+}
+
+.gitlog-lane.is-main i {
+  background: var(--violet);
+}
+
+.gitlog-lane.is-studies i {
+  background: var(--accent);
+}
+
+.commit {
+  position: relative;
+  display: grid;
+  grid-template-columns: 4.5rem minmax(0, 1fr);
+  gap: 0.5rem;
+  border-radius: 10px;
+  transition: background-color 0.2s ease;
+}
+
+.commit:hover {
+  background: var(--tag);
+}
+
+.commit-graph {
+  position: relative;
+}
+
+.commit-lane {
+  position: absolute;
+  width: 2px;
+  border-radius: 2px;
+  transform-origin: top;
+  transition: transform 700ms var(--ease-in-out);
+}
+
+.commit:not(.is-lit) .commit-lane {
+  transform: scaleY(0);
+}
+
+.commit-lane.is-main {
+  left: 1.2rem;
+  background: var(--violet);
+}
+
+.commit-lane.is-studies {
+  left: 2.9rem;
+  background: var(--accent);
+}
+
+.commit-node {
+  position: absolute;
+  top: 1.25rem;
+  width: 16px;
+  height: 16px;
+  border: 2.5px solid;
+  border-radius: 50%;
+  background: var(--bg);
+  opacity: 0.5;
+  transform: translateX(-7px) scale(0.7);
+  transition:
+    transform 0.5s cubic-bezier(0.215, 0.61, 0.355, 1),
+    opacity 0.5s ease,
+    box-shadow 0.5s ease;
+}
+
+.commit-node.is-main {
+  left: calc(1.2rem + 1px);
+  border-color: var(--violet);
+}
+
+.commit-node.is-studies {
+  left: calc(2.9rem + 1px);
+  border-color: var(--accent);
+}
+
+.commit.is-lit .commit-node {
+  opacity: 1;
+  transform: translateX(-7px) scale(1);
+}
+
+.commit.is-lit .commit-node.is-main {
+  box-shadow: 0 0 0 4px color-mix(in oklab, var(--violet) 25%, transparent);
+}
+
+.commit.is-lit .commit-node.is-studies {
+  box-shadow: 0 0 0 4px color-mix(in oklab, var(--accent) 25%, transparent);
+}
+
+.commit-fork {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.commit-fork path {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 2;
+}
+
+.commit-body {
+  padding: 1rem 1rem 1.4rem 0;
+}
+
+.commit-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.6rem;
+  color: var(--faint);
+  font: 500 0.8rem var(--f-mono);
+}
+
+.commit-hash {
+  color: var(--blue);
+}
+
+.commit-ref {
+  padding: 0.15rem 0.5rem;
+  border-radius: 5px;
+  font: 500 0.75rem var(--f-mono);
+}
+
+.commit-ref.is-head {
+  background: color-mix(in oklab, var(--violet) 16%, transparent);
+  color: var(--violet);
+}
+
+.commit-ref.is-branch {
+  background: color-mix(in oklab, var(--accent) 14%, transparent);
+  color: var(--accent);
+}
+
+.commit-title {
+  margin-top: 0.45rem;
+  font-size: 1.2rem;
+}
+
+.commit-org {
+  margin-top: 0.15rem;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+
+.commit-list {
+  max-width: 62ch;
+  margin: 0.7rem 0 0 1.1rem;
+  color: var(--muted);
+  font-size: 0.95rem;
+  line-height: 1.65;
+}
+
+.commit-diff {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 0.8rem;
+  margin-top: 0.8rem;
+  color: var(--add);
+  font: 500 0.78rem var(--f-mono);
+}
+
+.commit-diff span {
+  opacity: 0.85;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .commit-lane {
+    transition: none;
+  }
+
+  .commit:not(.is-lit) .commit-lane {
+    transform: none;
+  }
+}
+
+.commit-node::after {
+  content: '';
+  position: absolute;
+  inset: -2.5px;
+  border: 2px solid currentColor;
+  border-radius: 50%;
+  opacity: 0;
+}
+
+.commit-node.is-main {
+  color: var(--violet);
+}
+
+.commit-node.is-studies {
+  color: var(--accent);
+}
+
+.commit.is-lit .commit-node::after {
+  animation: commit-ripple 900ms var(--ease-out) 250ms;
+}
+
+@keyframes commit-ripple {
+  from {
+    opacity: 0.8;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(2.6);
+  }
+}
+
+@media (max-width: 600px) {
+  .gitlog {
+    padding: 1.1rem 1rem 0.5rem;
+  }
+
+  .commit {
+    grid-template-columns: 4rem minmax(0, 1fr);
+    gap: 0.25rem;
+  }
+
+  .commit-body {
+    padding: 0.9rem 0.5rem 1.2rem 0;
+  }
+
+  .commit-title {
+    font-size: 1.1rem;
+  }
+
+  .commit-list {
+    margin-left: 1rem;
+    font-size: 0.92rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .commit.is-lit .commit-node::after {
+    animation: none;
+  }
+}
