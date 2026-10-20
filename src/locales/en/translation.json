@@ -2,5 +2,33 @@
   "meta": {
     "title": "Pandora Lovatto · Full stack developer",
     "description": "Pandora Lovatto, full stack developer. Real web systems, from the interface to the database."
+  },
+  "nav": {
+    "label": "Navigation",
+    "sections": "Sections",
+    "home": "Home",
+    "toggleTheme": "toggle theme",
+    "unsaved": "Unsaved changes",
+    "files": {
+      "home": "home.tsx",
+      "projects": "projects.tsx",
+      "stack": "stack.tsx",
+      "experience": "experience.git",
+      "contact": "contact.tsx"
+    },
+    "tips": {
+      "experience": "git log"
+    },
+    "themeToLight": "Switch to light theme",
+    "themeToDark": "Switch to dark theme",
+    "language": "Language",
+    "skip": "Skip to content"
+  },
+  "statusBar": {
+    "label": "Status bar",
+    "build": "✓ build passing"
+  },
+  "footer": {
+    "copyright": "© {{year}} Pandora Becker Lovatto"
   }
 }
