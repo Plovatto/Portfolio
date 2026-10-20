@@ -1,430 +1,912 @@
 import type { Theme } from '../../context/theme-context'
-import type { CircuitGrid } from './circuitGenerator'
-import { computeCircuitGrid, pointAtDistance, subPath } from './circuitGenerator'
 import {
-  ALPHA,
-  CLICK,
-  GRID,
-  HOVER_GLOW,
-  OVERLOAD,
-  PARALLAX,
-  PING,
+  BOARD,
+  CARD,
+  FLASHLIGHT,
+  FRAME_BUDGET,
+  HUE,
+  INNER,
+  PALETTE,
   PULSE,
-  SECTOR_SIZE,
-  THEME_COLORS,
+  SPINE,
+  WAVE,
 } from './config'
-import { createCircuit, getCycleDuration, getOpacity } from './circuitLifecycle'
-import type { ClickBurst, ClickDot, LiveCircuit, Ping, ThemeColorConfig } from './types'
-import {
-  colorHsl,
-  colorMixAt,
-  hsla,
-  nearestDistanceToPath,
-  proximityInfluence,
-  smoothstep,
-} from './utils'
+import type { Palette } from './config'
+import { generateBoard, generateInner } from './generateBoard'
+import { distanceAt, perimeter, pointAt } from './geometry'
+import type { RoundRect } from './geometry'
+import { TileLayer, buildChunks, drawChunks, pathFrom } from './layers'
+import type { Chunk, ChunkStyle } from './layers'
+import { clamp, easeOutCubic, hsla } from './math'
+import { measurePins, toBoardScroll } from './pins'
+import type { PinRange } from './pins'
+import { PulseSystem } from './pulses'
+import { scanDom } from './scanDom'
+import { GlowSprites } from './sprites'
+import type { BoardChip, BoardData, ChipSpec } from './types'
+import { drawWaveEdges, graphWave, radialWave, waveDone, waveFront } from './waves'
+import type { Wave, WaveEdges } from './waves'
+
+interface CardVisual {
+  chip: BoardChip
+  stubs: Path2D
+  dots: Path2D
+  tap: Path2D | null
+  ports: number[]
+  tapPort: number
+  border: RoundRect
+  length: number
+  hoverEdges: WaveEdges | null | undefined
+  glow: number
+  flash: number
+  halo: HTMLCanvasElement | null
+  haloTheme: Theme | null
+}
+
+interface Comet {
+  card: CardVisual
+  start: number
+  from: number
+  dir: 1 | -1
+  hue: number
+  met: boolean
+}
+
+interface Launch {
+  at: number
+  card: CardVisual
+  from: number
+}
+
+interface Boot {
+  start: number
+  x: number
+  y: number
+  maxR: number
+  edges: WaveEdges | null
+}
+
+interface Pointer {
+  x: number
+  y: number
+  fine: boolean
+}
+
+const HALO_SCALE = 0.25
+
+function buildCardVisual(chip: BoardChip): CardVisual {
+  const { spec, pins } = chip
+  const o = CARD.outset
+  const w = spec.right - spec.left + o * 2
+  const h = spec.bottom - spec.top + o * 2
+  const border: RoundRect = {
+    x: spec.left - o,
+    y: spec.top - o,
+    w,
+    h,
+    r: Math.min(spec.radius + o, w / 2, h / 2),
+  }
+  const stubs = new Path2D()
+  const dots = new Path2D()
+  for (const pin of pins) {
+    stubs.moveTo(pin.x, pin.y)
+    stubs.lineTo(pin.ex, pin.ey)
+    dots.moveTo(pin.ex + CARD.portRadius, pin.ey)
+    dots.arc(pin.ex, pin.ey, CARD.portRadius, 0, Math.PI * 2)
+  }
+  const ports = pins.map((pin) => distanceAt(border, pin.ex, pin.ey))
+  const tapEnd = chip.tap ? [chip.tap[chip.tap.length - 2], chip.tap[chip.tap.length - 1]] : null
+  const tapIndex = tapEnd ? pins.findIndex((p) => p.x === tapEnd[0] && p.y === tapEnd[1]) : -1
+
+  return {
+    chip,
+    stubs,
+    dots,
+    tap: chip.tap ? pathFrom([chip.tap]) : null,
+    ports,
+    tapPort: tapIndex >= 0 ? ports[tapIndex] : (ports[0] ?? 0),
+    border,
+    length: perimeter(border),
+    hoverEdges: undefined,
+    glow: 0,
+    flash: 0,
+    halo: null,
+    haloTheme: null,
+  }
+}
+
+function renderHalo(spec: ChipSpec, palette: Palette): HTMLCanvasElement {
+  const s = HALO_SCALE
+  const pad = CARD.haloPad
+  const w = spec.right - spec.left
+  const h = spec.bottom - spec.top
+  const canvas = document.createElement('canvas')
+  canvas.width = Math.ceil((w + pad * 2) * s)
+  canvas.height = Math.ceil((h + pad * 2) * s)
+  const ctx = canvas.getContext('2d')!
+  ctx.scale(s, s)
+  const light = palette.signalLight
+  const grad = ctx.createLinearGradient(pad, pad, pad + w, pad + h)
+  grad.addColorStop(0, hsla(HUE.from, 100, light, 1))
+  grad.addColorStop(1, hsla(HUE.to, 100, light, 1))
+  ctx.fillStyle = grad
+  const supportsFilter = typeof (ctx as { filter?: unknown }).filter === 'string'
+  if (supportsFilter) {
+    ctx.filter = `blur(${CARD.haloBlur * s}px)`
+  } else {
+    ctx.shadowColor = hsla((HUE.from + HUE.to) / 2, 100, light, 1)
+    ctx.shadowBlur = CARD.haloBlur * 2 * s
+  }
+  ctx.beginPath()
+  ctx.roundRect(pad, pad, w, h, spec.radius)
+  ctx.fill()
+  return canvas
+}
+
+function boardStyle(p: Palette): ChunkStyle {
+  return {
+    trace: p.trace,
+    via: p.via,
+    pad: p.pad,
+    part: p.part,
+    silk: p.silk,
+    substrate: p.substrate,
+  }
+}
+
+function innerStyle(p: Palette): ChunkStyle {
+  return {
+    trace: p.inner,
+    via: p.innerVia,
+    pad: p.innerVia,
+    part: p.inner,
+    silk: null,
+    substrate: null,
+  }
+}
 
 export class CircuitEngine {
-  private readonly ctx: CanvasRenderingContext2D
-  private readonly prefersReducedMotion: boolean
-
-  private grid: CircuitGrid | null = null
-  private circuits: LiveCircuit[] = []
-  private width = 0
-  private height = 0
-  private animationFrame = 0
-  private lastTime = 0
-  private resizeTimeout: number | undefined
-
-  private pointerX: number | null = null
-  private pointerY: number | null = null
-  private clickBursts: ClickBurst[] = []
-  private pings: Ping[] = []
-  private clickDots: ClickDot[] = []
-  private parallaxX = 0
-  private parallaxY = 0
-  private hoverGlowStrength = 0
-
   private readonly canvas: HTMLCanvasElement
+  private readonly ctx: CanvasRenderingContext2D
   private readonly getTheme: () => Theme
+  private readonly label: string
+  private readonly reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  private readonly coarse = window.matchMedia('(pointer: coarse)').matches
+  private readonly sprites = new GlowSprites()
+  private readonly pulses = new PulseSystem()
+  private readonly powered = new Set<string>()
 
-  constructor(canvas: HTMLCanvasElement, getTheme: () => Theme) {
+  private board: BoardData | null = null
+  private chunks: Chunk[] = []
+  private boardTiles: TileLayer | null = null
+  private innerTiles: TileLayer | null = null
+  private nodeBuckets: number[][] = []
+  private cards: CardVisual[] = []
+  private pins: PinRange[] = []
+  private spinePath: Path2D | null = null
+  private waves: Wave[] = []
+  private comets: Comet[] = []
+  private launches: Launch[] = []
+  private boot: Boot | null = null
+  private booted = false
+  private hovered: CardVisual | null = null
+  private lastHoverWave = 0
+
+  private pointer: Pointer | null = null
+  private lastSpawn = 0
+  private lastSpawnX = 0
+  private lastSpawnY = 0
+  private glow = 0
+  private parX = 0
+  private parY = 0
+
+  private vw = 0
+  private vh = 0
+  private dpr = 1
+  private docW = 0
+  private docH = 0
+  private raf = 0
+  private last = 0
+  private dirty = true
+  private lastScroll = -1
+  private lastTheme: Theme | null = null
+  private regenTimer: number | undefined
+  private observer: ResizeObserver | null = null
+  private chipSizes = new Map<HTMLElement, { w: number; h: number }>()
+  private running = false
+  private pageScroll = 0
+  private lowPower = false
+  private sampled = 0
+  private slow = 0
+
+  constructor(canvas: HTMLCanvasElement, getTheme: () => Theme, label: string) {
     this.canvas = canvas
-    this.getTheme = getTheme
     this.ctx = canvas.getContext('2d')!
-    this.prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    this.getTheme = getTheme
+    this.label = label
   }
 
   start() {
-    this.setup()
-    this.animationFrame = requestAnimationFrame(this.render)
+    this.running = true
+    this.measure()
+    this.pageScroll = window.scrollY
+
+    window.addEventListener('scroll', this.handleScroll, { passive: true })
     window.addEventListener('resize', this.handleResize)
     document.addEventListener('visibilitychange', this.handleVisibility)
-    window.addEventListener('pointermove', this.handlePointerMove)
-    window.addEventListener('pointerleave', this.handlePointerLeave)
+    window.addEventListener('pointermove', this.handlePointerMove, { passive: true })
+    window.addEventListener('pointerdown', this.handlePointerDown, { passive: true })
     window.addEventListener('blur', this.handlePointerLeave)
-    window.addEventListener('click', this.handleClick)
+    document.documentElement.addEventListener('mouseleave', this.handlePointerLeave)
+    document.addEventListener('pointerover', this.handlePointerOver)
+    document.addEventListener('focusin', this.handleFocusIn)
+    document.addEventListener('focusout', this.handleFocusOut)
+
+    const fontsReady = Promise.race([
+      document.fonts?.ready ?? Promise.resolve(),
+      new Promise((resolve) => window.setTimeout(resolve, 700)),
+    ])
+    fontsReady.then(() => {
+      if (!this.running) return
+      this.generate()
+      this.observer = new ResizeObserver(this.checkLayout)
+      this.observeLayout()
+      this.raf = requestAnimationFrame(this.frame)
+    })
   }
 
   stop() {
-    cancelAnimationFrame(this.animationFrame)
-    window.clearTimeout(this.resizeTimeout)
+    this.running = false
+    cancelAnimationFrame(this.raf)
+    window.clearTimeout(this.regenTimer)
+    this.observer?.disconnect()
+    window.removeEventListener('scroll', this.handleScroll)
     window.removeEventListener('resize', this.handleResize)
     document.removeEventListener('visibilitychange', this.handleVisibility)
     window.removeEventListener('pointermove', this.handlePointerMove)
-    window.removeEventListener('pointerleave', this.handlePointerLeave)
+    window.removeEventListener('pointerdown', this.handlePointerDown)
     window.removeEventListener('blur', this.handlePointerLeave)
-    window.removeEventListener('click', this.handleClick)
+    document.documentElement.removeEventListener('mouseleave', this.handlePointerLeave)
+    document.removeEventListener('pointerover', this.handlePointerOver)
+    document.removeEventListener('focusin', this.handleFocusIn)
+    document.removeEventListener('focusout', this.handleFocusOut)
   }
 
-  private setup = () => {
-    const dpr = Math.min(window.devicePixelRatio || 1, 2)
-    this.width = window.innerWidth
-    this.height = window.innerHeight
+  private measure() {
+    this.dpr = this.lowPower ? 1 : Math.min(window.devicePixelRatio || 1, 2)
+    this.vw = window.innerWidth
+    this.vh = window.innerHeight
+    this.canvas.width = Math.round(this.vw * this.dpr)
+    this.canvas.height = Math.round(this.vh * this.dpr)
+    this.canvas.style.width = `${this.vw}px`
+    this.canvas.style.height = `${this.vh}px`
+    this.dirty = true
+  }
 
-    this.canvas.width = this.width * dpr
-    this.canvas.height = this.height * dpr
-    this.canvas.style.width = `${this.width}px`
-    this.canvas.style.height = `${this.height}px`
-    this.ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
+  private generate() {
+    const root = document.documentElement
+    this.docW = root.clientWidth
+    this.docH = Math.max(root.scrollHeight, this.vh)
+    this.pins = measurePins()
+    this.pageScroll = window.scrollY
+    const { chips, quiets } = scanDom(this.pins)
 
-    const nextGrid = computeCircuitGrid({
-      width: this.width,
-      height: this.height,
-      sectorSize: SECTOR_SIZE,
+    const board = generateBoard({
+      width: this.docW,
+      height: this.docH,
+      cell: this.coarse ? BOARD.cellCoarse : BOARD.cell,
+      chips,
+      quiets,
+      label: this.label,
+      spine: !this.coarse,
     })
-    this.grid = nextGrid
-    this.circuits = []
+    this.board = board
+    this.chunks = buildChunks(board, BOARD.chunkHeight)
+    this.boardTiles = new TileLayer(this.chunks, this.docW, BOARD.chunkHeight, this.dpr)
 
-    for (let sy = 0; sy < nextGrid.sectorRows; sy++) {
-      for (let sx = 0; sx < nextGrid.sectorCols; sx++) {
-        const circuit = createCircuit(nextGrid, sx, sy)
-        circuit.age = Math.random() * getCycleDuration(circuit)
-        this.circuits.push(circuit)
+    const pad = INNER.parallax * 2
+    const innerWidth = this.docW + pad * 2
+    const innerHeight = this.vh + (this.docH - this.vh) * INNER.scroll + pad * 2
+    const innerChunks = buildChunks(generateInner(innerWidth, innerHeight), BOARD.chunkHeight)
+    this.innerTiles = new TileLayer(innerChunks, innerWidth, BOARD.chunkHeight, 1)
+
+    this.nodeBuckets = []
+    board.graph.nodeY.forEach((y, node) => {
+      if (!board.graph.adj[node].length) return
+      const i = Math.floor(y / BOARD.chunkHeight)
+      while (this.nodeBuckets.length <= i) this.nodeBuckets.push([])
+      this.nodeBuckets[i].push(node)
+    })
+
+    this.cards = board.chips.map(buildCardVisual)
+    this.chipSizes = new Map(
+      board.chips.map(({ spec }) => [spec.el, { w: spec.el.offsetWidth, h: spec.el.offsetHeight }]),
+    )
+    this.observeLayout()
+    for (const card of this.cards) {
+      if (this.powered.has(card.chip.spec.ref)) card.glow = CARD.baseGlow
+    }
+    this.spinePath = board.spine ? pathFrom(board.spine.map((line) => line.points)) : null
+    this.pulses.reset(board.graph)
+    this.waves = []
+    this.comets = []
+    this.launches = []
+    this.hovered = null
+
+    if (!this.booted) this.startBoot()
+    this.dirty = true
+  }
+
+  private observeLayout() {
+    const observer = this.observer
+    if (!observer) return
+    observer.disconnect()
+    observer.observe(document.body)
+    for (const el of this.chipSizes.keys()) observer.observe(el)
+  }
+
+  private checkLayout = () => {
+    const root = document.documentElement
+    const chipResized = [...this.chipSizes].some(
+      ([el, size]) => el.isConnected && (el.offsetWidth !== size.w || el.offsetHeight !== size.h),
+    )
+    if (chipResized || root.clientWidth !== this.docW || root.scrollHeight !== this.docH) {
+      this.scheduleRegen()
+    }
+  }
+
+  private scheduleRegen() {
+    window.clearTimeout(this.regenTimer)
+    this.regenTimer = window.setTimeout(() => {
+      this.measure()
+      this.generate()
+    }, 160)
+  }
+
+  private startBoot() {
+    const hero = this.cards.find((c) => c.chip.spec.hero)
+    if (!hero || this.reduced || !this.board) {
+      this.finishBoot()
+      return
+    }
+    const { spec } = hero.chip
+    const x = (spec.left + spec.right) / 2
+    const y = (spec.top + spec.bottom) / 2
+    const sy = this.boardScroll()
+    const maxR =
+      Math.max(
+        Math.hypot(x, y - sy),
+        Math.hypot(this.vw - x, y - sy),
+        Math.hypot(x, sy + this.vh - y),
+        Math.hypot(this.vw - x, sy + this.vh - y),
+      ) + 80
+    const start = this.boot?.start ?? performance.now() + WAVE.boot.delay
+    this.boot = { start, x, y, maxR, edges: radialWave(this.board.graph, x, y) }
+  }
+
+  private finishBoot() {
+    this.boot = null
+    this.booted = true
+    const hero = this.cards.find((c) => c.chip.spec.hero)
+    if (hero) this.powerOn(hero, performance.now())
+  }
+
+  private powerOn(card: CardVisual, now: number) {
+    const { ref, el } = card.chip.spec
+    if (this.powered.has(ref)) return
+    this.powered.add(ref)
+    el.dataset.powered = 'true'
+    this.dirty = true
+    if (this.reduced || !this.board) return
+    const edges = graphWave(this.board.graph, card.chip.pinNodes, WAVE.power.maxD)
+    this.addWave(edges, WAVE.power, true, now)
+    const arrival = edges ? (edges.maxD / WAVE.power.speed) * 1000 : 0
+    this.launches.push({ at: now + arrival, card, from: card.tapPort })
+  }
+
+  private updatePower(now: number, scrollY: number) {
+    if (!this.booted || !this.board) return
+    const progress = scrollY + this.vh * SPINE.progress
+    for (const card of this.cards) {
+      const { chip } = card
+      if (this.powered.has(chip.spec.ref)) continue
+      const ready =
+        this.board.spine && chip.tapY !== null
+          ? chip.tapY <= progress
+          : chip.spec.top <= scrollY + this.vh * 0.82
+      if (ready) this.powerOn(card, now)
+    }
+
+    const hovered = this.hovered
+    if (hovered && !this.reduced && now - this.lastHoverWave > WAVE.hover.interval) {
+      this.lastHoverWave = now
+      const edges = this.hoverEdges(hovered)
+      this.addWave(edges, WAVE.hover, true, now)
+      if (hovered.ports.length) {
+        const from = hovered.ports[Math.floor(Math.random() * hovered.ports.length)]
+        const arrival = edges ? (edges.maxD / WAVE.hover.speed) * 1000 : 0
+        this.launches.push({ at: now + arrival, card: hovered, from })
       }
     }
-  }
 
-  private drawGrid() {
-    const ctx = this.ctx
-    ctx.strokeStyle = GRID.color[this.getTheme()]
-    ctx.lineWidth = GRID.lineWidth
-    ctx.beginPath()
-    for (let x = 0; x <= this.width; x += GRID.spacing) {
-      ctx.moveTo(x, 0)
-      ctx.lineTo(x, this.height)
-    }
-    for (let y = 0; y <= this.height; y += GRID.spacing) {
-      ctx.moveTo(0, y)
-      ctx.lineTo(this.width, y)
-    }
-    ctx.stroke()
-  }
-
-  private drawHoverGlow(x: number, y: number, strength: number) {
-    if (strength <= 0.01) return
-    const ctx = this.ctx
-    const radius = HOVER_GLOW.minRadius + strength * (HOVER_GLOW.maxRadius - HOVER_GLOW.minRadius)
-    const gradient = ctx.createRadialGradient(x, y, 0, x, y, radius)
-    gradient.addColorStop(0, `hsla(${HOVER_GLOW.hue}, 85%, 60%, ${HOVER_GLOW.alpha * strength})`)
-    gradient.addColorStop(
-      0.55,
-      `hsla(${HOVER_GLOW.hue}, 85%, 55%, ${HOVER_GLOW.alpha * 0.4 * strength})`,
-    )
-    gradient.addColorStop(1, `hsla(${HOVER_GLOW.hue}, 85%, 55%, 0)`)
-    ctx.fillStyle = gradient
-    ctx.beginPath()
-    ctx.arc(x, y, radius, 0, Math.PI * 2)
-    ctx.fill()
-  }
-
-  private spawnClickDots(x: number, y: number, colors: ThemeColorConfig, time: number) {
-    for (let i = 0; i < CLICK.ringCount && this.clickDots.length < CLICK.maxDots; i++) {
-      const parts = colorHsl(colors, Math.random(), 0.25)
-      this.clickDots.push({
-        x,
-        y,
-        start: time + i * CLICK.ringStagger,
-        hue: parts.hue,
-        sat: parts.sat,
-        light: parts.light,
-        startRadius: 3,
-        maxRadius: CLICK.ringMaxRadius,
-        baseOpacity: 0.5,
+    if (this.launches.length) {
+      this.launches = this.launches.filter((l) => {
+        if (now < l.at) return true
+        this.launchComets(l.card, l.from, now)
+        return false
       })
     }
   }
 
-  private updateParallax(delta: number) {
-    let targetX = 0
-    let targetY = 0
-    if (
-      !this.prefersReducedMotion &&
-      this.pointerX !== null &&
-      this.pointerY !== null &&
-      this.width &&
-      this.height
-    ) {
-      targetX = ((this.pointerX - this.width / 2) / (this.width / 2)) * PARALLAX.maxShift
-      targetY = ((this.pointerY - this.height / 2) / (this.height / 2)) * PARALLAX.maxShift
+  private hoverEdges(card: CardVisual): WaveEdges | null {
+    if (card.hoverEdges === undefined && this.board) {
+      card.hoverEdges = graphWave(this.board.graph, card.chip.pinNodes, WAVE.hover.maxD)
     }
-    const ease = 1 - Math.exp(-PARALLAX.smoothRate * delta)
-    this.parallaxX += (targetX - this.parallaxX) * ease
-    this.parallaxY += (targetY - this.parallaxY) * ease
+    return card.hoverEdges ?? null
   }
 
-  private updateHoverGlow(delta: number) {
-    const target =
-      !this.prefersReducedMotion && this.pointerX !== null && this.pointerY !== null ? 1 : 0
-    this.hoverGlowStrength +=
-      (target - this.hoverGlowStrength) * (1 - Math.exp(-HOVER_GLOW.smoothRate * delta))
+  private boardScroll() {
+    return toBoardScroll(this.pageScroll, this.pins)
   }
 
-  private updateAndDrawCircuit(
-    circuit: LiveCircuit,
-    time: number,
-    delta: number,
-    deltaMs: number,
-    colors: ThemeColorConfig,
-  ) {
-    circuit.age += deltaMs
-
-    if (circuit.age >= getCycleDuration(circuit) && this.grid) {
-      const reborn = createCircuit(this.grid, circuit.sectorX, circuit.sectorY)
-      circuit.path = reborn.path
-      circuit.pulse = reborn.pulse
-      circuit.fadeInDuration = reborn.fadeInDuration
-      circuit.activeDuration = reborn.activeDuration
-      circuit.fadeOutDuration = reborn.fadeOutDuration
-      circuit.age = 0
+  private launchComets(card: CardVisual, from: number, now: number) {
+    const { spec } = card.chip
+    if (spec.bare) {
+      const pin = card.chip.pins[card.ports.indexOf(from)]
+      const detail = pin
+        ? { x: pin.ex - spec.left, y: pin.ey - spec.top }
+        : { x: (spec.right - spec.left) / 2, y: 0 }
+      spec.el.dispatchEvent(new CustomEvent('board:current', { detail }))
+      return
     }
-
-    const path = circuit.path
-    if (this.prefersReducedMotion || path.totalLength === 0) return
-
-    let hoverProximity = 0
-    if (this.pointerX !== null && this.pointerY !== null) {
-      hoverProximity = proximityInfluence(
-        nearestDistanceToPath(path, this.pointerX, this.pointerY),
-        OVERLOAD.radius,
-      )
-    }
-    let targetInfluence = hoverProximity
-    for (const burst of this.clickBursts) {
-      const spatial = proximityInfluence(
-        nearestDistanceToPath(path, burst.x, burst.y),
-        OVERLOAD.radius,
-      )
-      if (spatial <= 0) continue
-      const timeDecay = 1 - smoothstep((time - burst.start) / CLICK.burstDuration)
-      targetInfluence += spatial * timeDecay * CLICK.surgeMultiplier
-    }
-    targetInfluence = Math.min(OVERLOAD.maxInfluence, targetInfluence)
-    circuit.influence +=
-      (targetInfluence - circuit.influence) * (1 - Math.exp(-OVERLOAD.smoothRate * delta))
-    if (circuit.influence < 0.001) circuit.influence = 0
-    const influence = circuit.influence
-    const surge = Math.max(0, influence - 1)
-    const surgeVisual = Math.min(1, surge)
-    const colorBoost = Math.min(1, influence)
-
-    const opacity = Math.max(
-      getOpacity(circuit),
-      Math.min(1, surge * 1.4),
-      hoverProximity * OVERLOAD.hoverRevealStrength,
+    if (this.reduced) return
+    while (this.comets.length > CARD.maxComets - 2) this.comets.shift()
+    this.comets.push(
+      { card, start: now, from, dir: 1, hue: HUE.from + 4, met: false },
+      { card, start: now, from, dir: -1, hue: HUE.to - 4, met: false },
     )
-    if (opacity <= 0.01) return
+    card.flash = Math.max(card.flash, 0.5)
+  }
 
-    const pulse = circuit.pulse
-    const prevDistance = pulse.distance
-    const speedMultiplier =
-      1 + Math.min(1, influence) * OVERLOAD.speedBoost + surge * CLICK.speedBoost
-    pulse.distance += pulse.speed * speedMultiplier * delta
+  private addWave(
+    edges: WaveEdges | null,
+    config: { speed: number; trail: number },
+    inward: boolean,
+    now: number,
+  ) {
+    if (!edges) return
+    this.waves.push({ edges, start: now, speed: config.speed, trail: config.trail, inward })
+    if (this.waves.length > WAVE.max) this.waves.shift()
+  }
 
-    if (
-      !this.prefersReducedMotion &&
-      pulse.distance > prevDistance &&
-      this.pings.length < PING.max
-    ) {
-      for (const vd of path.vertexDistances) {
-        if (vd > 0 && vd < path.totalLength && vd > prevDistance && vd <= pulse.distance) {
-          const p = pointAtDistance(path, vd)
-          this.pings.push({ x: p.x, y: p.y, start: time, colorT: colorMixAt(pulse, vd) })
+  private frame = (now: number) => {
+    this.raf = requestAnimationFrame(this.frame)
+    const interval = this.last ? now - this.last : 0
+    const dt = Math.min(interval / 1000, 0.05)
+    this.last = now
+    this.watchFrameBudget(interval)
+
+    const theme = this.getTheme()
+    const scrollY = this.boardScroll()
+    if (theme !== this.lastTheme || scrollY !== this.lastScroll) this.dirty = true
+    this.lastTheme = theme
+    this.lastScroll = scrollY
+
+    this.updatePower(now, scrollY)
+    if (this.reduced && !this.dirty) return
+    this.dirty = false
+    this.draw(now, dt, scrollY, theme)
+  }
+
+  private draw(now: number, dt: number, scrollY: number, theme: Theme) {
+    const ctx = this.ctx
+    const palette = PALETTE[theme]
+    ctx.setTransform(this.dpr, 0, 0, this.dpr, 0, 0)
+    ctx.clearRect(0, 0, this.vw, this.vh)
+    const board = this.board
+    if (!board || !this.boardTiles || !this.innerTiles) return
+    ctx.lineCap = 'round'
+    ctx.lineJoin = 'round'
+    this.updatePointerEffects(dt)
+
+    const sy = Math.round(scrollY * this.dpr) / this.dpr
+    const top = sy
+    const bottom = sy + this.vh
+
+    const pad = INNER.parallax * 2
+    const innerTop = scrollY * INNER.scroll + pad - this.parY
+    ctx.save()
+    ctx.translate(this.parX - pad, -innerTop)
+    this.innerTiles.draw(ctx, innerTop, innerTop + this.vh, innerStyle(palette), theme)
+    ctx.restore()
+
+    ctx.save()
+    ctx.translate(0, -sy)
+
+    let bootR = -1
+    if (this.boot) {
+      const p = (now - this.boot.start) / WAVE.boot.duration
+      if (p >= 1) this.finishBoot()
+      else bootR = easeOutCubic(Math.max(0, p)) * this.boot.maxR
+    }
+    const boot = this.boot
+
+    if (boot) {
+      ctx.save()
+      ctx.beginPath()
+      ctx.arc(boot.x, boot.y, Math.max(1, bootR), 0, Math.PI * 2)
+      ctx.clip()
+    }
+    this.boardTiles.draw(ctx, top, bottom, boardStyle(palette), theme)
+    ctx.lineWidth = BOARD.traceWidth
+    ctx.strokeStyle = palette.trace
+    ctx.fillStyle = palette.pad
+    for (const card of this.cards) {
+      ctx.stroke(card.stubs)
+      ctx.fill(card.dots)
+    }
+    if (!boot) this.drawFlashlight(palette, scrollY)
+    this.drawSpine(now, scrollY + this.vh * SPINE.progress, palette)
+    if (boot) ctx.restore()
+
+    ctx.globalCompositeOperation = palette.additive ? 'lighter' : 'source-over'
+    this.drawHalos(dt, top, bottom, palette, theme)
+    this.drawLitPorts(palette)
+    if (boot?.edges) {
+      drawWaveEdges(ctx, boot.edges, bootR, WAVE.boot.trail, false, palette, this.sprites)
+    }
+    this.waves = this.waves.filter((w) => !waveDone(w, now))
+    for (const w of this.waves) {
+      drawWaveEdges(ctx, w.edges, waveFront(w, now), w.trail, w.inward, palette, this.sprites)
+    }
+    if (!this.reduced && !boot) {
+      this.maintainPulses(now, top, bottom)
+      this.pulses.update(dt, now, top, bottom)
+      this.pulses.draw(ctx, palette, this.sprites)
+    }
+    this.drawComets(now, palette)
+    ctx.globalCompositeOperation = 'source-over'
+    ctx.restore()
+
+    this.drawCursorGlow(palette)
+  }
+
+  private updatePointerEffects(dt: number) {
+    const p = this.pointer
+    const active = p !== null && p.fine
+    const ease = this.reduced ? 1 : 1 - Math.exp(-3 * dt)
+    let tx = 0
+    let ty = 0
+    if (active && !this.reduced) {
+      tx = ((p.x - this.vw / 2) / (this.vw / 2)) * INNER.parallax
+      ty = ((p.y - this.vh / 2) / (this.vh / 2)) * INNER.parallax
+    }
+    this.parX += (tx - this.parX) * ease
+    this.parY += (ty - this.parY) * ease
+    this.glow += ((active ? 1 : 0) - this.glow) * ease
+  }
+
+  private drawHalos(dt: number, top: number, bottom: number, palette: Palette, theme: Theme) {
+    const ctx = this.ctx
+    const ease = this.reduced ? 1 : 1 - Math.exp(-6 * dt)
+    const decay = this.reduced ? 0 : Math.exp(-2.2 * dt)
+    const pad = CARD.haloPad
+
+    for (const card of this.cards) {
+      const { spec } = card.chip
+      if (spec.bare) continue
+      const target =
+        (this.powered.has(spec.ref) ? CARD.baseGlow : 0) +
+        (card === this.hovered ? CARD.hoverGlow : 0)
+      card.glow += (target - card.glow) * ease
+      card.flash *= decay
+      const alpha = Math.min(1, card.glow + card.flash * 0.55) * palette.halo
+      if (alpha < 0.01 || spec.bottom + pad < top || spec.top - pad > bottom) continue
+      if (!card.halo || card.haloTheme !== theme) {
+        card.halo = renderHalo(spec, palette)
+        card.haloTheme = theme
+      }
+      ctx.globalAlpha = alpha
+      ctx.drawImage(
+        card.halo,
+        spec.left - pad,
+        spec.top - pad,
+        spec.right - spec.left + pad * 2,
+        spec.bottom - spec.top + pad * 2,
+      )
+    }
+    ctx.globalAlpha = 1
+  }
+
+  private drawLitPorts(palette: Palette) {
+    const ctx = this.ctx
+    const { signalSat: sat, signalLight: light } = palette
+    for (const card of this.cards) {
+      if (!this.powered.has(card.chip.spec.ref)) continue
+      const hot = card === this.hovered
+      const strength = Math.min(1, (hot ? 0.95 : 0.5) + card.flash * 0.5)
+      const color = hsla(HUE.from + 10, sat, light + 8, strength)
+      ctx.strokeStyle = color
+      ctx.fillStyle = color
+      ctx.lineWidth = BOARD.traceWidth
+      ctx.stroke(card.stubs)
+      ctx.fill(card.dots)
+      if (card.tap) {
+        ctx.lineWidth = SPINE.width
+        ctx.stroke(card.tap)
+      }
+      if (hot || card.flash > 0.2) {
+        const glowAlpha = (hot ? 0.7 : card.flash) * palette.glowAlpha
+        for (const pin of card.chip.pins) {
+          this.sprites.draw(ctx, HUE.from + 10, light, pin.ex, pin.ey, 9, glowAlpha)
         }
       }
     }
+  }
 
-    if (pulse.distance > path.totalLength + PULSE.trailLength) {
-      pulse.distance = -Math.random() * 120
-    }
-
-    const clamped = Math.max(0, Math.min(pulse.distance, path.totalLength))
-    const trailStart = Math.max(0, pulse.distance - PULSE.trailLength)
-    const trail = subPath(path, trailStart, clamped)
-    const headColorT = colorMixAt(pulse, clamped)
+  private drawComets(now: number, palette: Palette) {
+    if (!this.comets.length) return
     const ctx = this.ctx
+    const { signalSat: sat, signalLight: light } = palette
+    const L = CARD.cometLength
+    const steps = 16
 
-    if (influence > 0.01) {
-      let revealDistance = 0
-      ctx.lineWidth = 2 + surgeVisual * OVERLOAD.lineThicken * 5
-      for (let i = 1; i < path.points.length; i++) {
-        revealDistance += Math.hypot(
-          path.points[i].x - path.points[i - 1].x,
-          path.points[i].y - path.points[i - 1].y,
-        )
-        const parts = colorHsl(colors, colorMixAt(pulse, revealDistance), colorBoost)
-        ctx.strokeStyle = hsla(parts, Math.min(1, OVERLOAD.revealAlpha * influence * opacity))
-        ctx.beginPath()
-        ctx.moveTo(path.points[i - 1].x, path.points[i - 1].y)
-        ctx.lineTo(path.points[i].x, path.points[i].y)
-        ctx.stroke()
+    this.comets = this.comets.filter((c) => {
+      const { card } = c
+      const travel = card.length / 2
+      const s = ((now - c.start) / 1000) * CARD.cometSpeed
+      if (s > travel + L) return false
+      if (s >= travel && !c.met) {
+        c.met = true
+        if (c.dir === 1) card.flash = 1
       }
-    }
+      const head = Math.min(s, travel)
+      const tail = Math.min(L, s) - Math.max(0, s - travel)
+      if (tail <= 0) return true
+      const fade = s < travel ? 1 : 1 - (s - travel) / L
 
-    const alphaBoost = 1 + influence * OVERLOAD.alphaBoost
-    let segmentDistance = trailStart
-    const segCount = Math.max(1, trail.length - 1)
-    for (let i = 1; i < trail.length; i++) {
-      segmentDistance += Math.hypot(trail[i].x - trail[i - 1].x, trail[i].y - trail[i - 1].y)
-      const tRatio = i / segCount
-      const parts = colorHsl(colors, colorMixAt(pulse, segmentDistance), colorBoost)
-      const alpha = Math.min(1, Math.pow(tRatio, 1.3) * ALPHA.trail * opacity * alphaBoost)
-
-      ctx.strokeStyle = hsla(parts, alpha)
-      ctx.lineWidth =
-        1.3 + tRatio * 2 * (1 + Math.min(1, influence) * 0.5 + surgeVisual * OVERLOAD.lineThicken)
-      ctx.beginPath()
-      ctx.moveTo(trail[i - 1].x, trail[i - 1].y)
-      ctx.lineTo(trail[i].x, trail[i].y)
-      ctx.stroke()
-
-      if (tRatio > 0.6) {
-        const coreAlpha = ((tRatio - 0.6) / 0.4) * alpha * 0.5
-        ctx.strokeStyle = `hsla(0, 0%, 100%, ${coreAlpha})`
-        ctx.lineWidth = 0.8
+      let prev = pointAt(card.border, c.from + c.dir * head)
+      const headPoint = prev
+      for (let k = 1; k <= steps; k++) {
+        const t = k / steps
+        const point = pointAt(card.border, c.from + c.dir * (head - tail * t))
+        ctx.strokeStyle = hsla(c.hue, sat, light + (k < 4 ? 18 : 4), (1 - t) * 0.95 * fade)
+        ctx.lineWidth = 2.6 - t * 1.6
         ctx.beginPath()
-        ctx.moveTo(trail[i - 1].x, trail[i - 1].y)
-        ctx.lineTo(trail[i].x, trail[i].y)
+        ctx.moveTo(prev.x, prev.y)
+        ctx.lineTo(point.x, point.y)
         ctx.stroke()
+        prev = point
       }
-    }
-
-    if (pulse.distance >= 0 && pulse.distance <= path.totalLength) {
-      const head = pointAtDistance(path, clamped)
-      const parts = colorHsl(colors, headColorT, colorBoost)
-      const glowRadius = 8 + Math.min(1, influence) * 6 + surgeVisual * 4
-
-      const glow = ctx.createRadialGradient(head.x, head.y, 0, head.x, head.y, glowRadius)
-      glow.addColorStop(0, hsla(parts, Math.min(1, ALPHA.glow * opacity * alphaBoost)))
-      glow.addColorStop(1, hsla(parts, 0))
-      ctx.fillStyle = glow
-      ctx.beginPath()
-      ctx.arc(head.x, head.y, glowRadius, 0, Math.PI * 2)
-      ctx.fill()
-
-      ctx.fillStyle = hsla(parts, Math.min(1, ALPHA.head * opacity * alphaBoost))
-      ctx.beginPath()
-      ctx.arc(head.x, head.y, 2 + surgeVisual * 0.8, 0, Math.PI * 2)
-      ctx.fill()
-    }
+      this.sprites.draw(ctx, c.hue, light, headPoint.x, headPoint.y, 18, palette.glowAlpha * fade)
+      return true
+    })
   }
 
-  private drawPings(time: number, colors: ThemeColorConfig) {
+  private drawFlashlight(palette: Palette, scrollY: number) {
+    const p = this.pointer
+    if (!p || !p.fine || this.glow < 0.01) return
     const ctx = this.ctx
-    for (const ping of this.pings) {
-      const progress = (time - ping.start) / PING.duration
-      if (progress >= 1) continue
-      const parts = colorHsl(colors, ping.colorT, 0.3)
-      ctx.strokeStyle = hsla(parts, (1 - progress) * 0.7)
-      ctx.lineWidth = Math.max(0.6, 1.8 * (1 - progress))
-      ctx.beginPath()
-      ctx.arc(ping.x, ping.y, 2 + progress * 16, 0, Math.PI * 2)
-      ctx.stroke()
-    }
-  }
+    const x = p.x
+    const y = p.y + scrollY
+    const R = FLASHLIGHT.radius
+    const { signalSat: sat, signalLight: light, flashlight: alpha } = palette
+    const g = ctx.createRadialGradient(x, y, 0, x, y, R)
+    g.addColorStop(0, hsla(HUE.from + 6, sat, light + 10, alpha))
+    g.addColorStop(0.45, hsla((HUE.from + HUE.to) / 2, sat, light, alpha * 0.45))
+    g.addColorStop(1, hsla(HUE.to, sat, light, 0))
 
-  private drawClickDotRings(time: number) {
-    const ctx = this.ctx
-    for (const dot of this.clickDots) {
-      const progress = (time - dot.start) / CLICK.dotDuration
-      if (progress < 0 || progress >= 1) continue
-      const eased = smoothstep(progress)
-      const ringRadius = dot.startRadius + eased * (dot.maxRadius - dot.startRadius)
-      const alpha = dot.baseOpacity * (1 - eased)
-      ctx.strokeStyle = hsla({ hue: dot.hue, sat: dot.sat, light: dot.light }, alpha)
-      ctx.lineWidth = Math.max(0.5, 1.6 * (1 - progress))
-      ctx.beginPath()
-      ctx.arc(dot.x, dot.y, ringRadius, 0, Math.PI * 2)
-      ctx.stroke()
-    }
-  }
-
-  private render = (time: number) => {
-    const delta = this.lastTime ? Math.min((time - this.lastTime) / 1000, 0.1) : 0
-    this.lastTime = time
-    const colors = THEME_COLORS[this.getTheme()]
-    const deltaMs = delta * 1000
-
-    this.clickBursts = this.clickBursts.filter((burst) => time - burst.start < CLICK.burstDuration)
-    this.pings = this.pings.filter((ping) => time - ping.start < PING.duration)
-    this.clickDots = this.clickDots.filter((dot) => time - dot.start < CLICK.dotDuration)
-
-    this.updateParallax(delta)
-    this.updateHoverGlow(delta)
-
-    const ctx = this.ctx
-    ctx.clearRect(0, 0, this.width, this.height)
-    this.drawGrid()
-    ctx.lineCap = 'round'
-    ctx.lineJoin = 'round'
     ctx.save()
-    ctx.translate(this.parallaxX, this.parallaxY)
-
-    for (const circuit of this.circuits) {
-      this.updateAndDrawCircuit(circuit, time, delta, deltaMs, colors)
+    ctx.beginPath()
+    ctx.arc(x, y, R, 0, Math.PI * 2)
+    ctx.clip()
+    ctx.globalAlpha = this.glow
+    drawChunks(ctx, this.chunks, y - R, y + R, {
+      trace: g,
+      via: g,
+      pad: g,
+      part: g,
+      silk: g,
+      substrate: null,
+    })
+    ctx.strokeStyle = g
+    ctx.fillStyle = g
+    ctx.lineWidth = BOARD.traceWidth
+    for (const card of this.cards) {
+      ctx.stroke(card.stubs)
+      ctx.fill(card.dots)
     }
+    ctx.restore()
+  }
 
-    this.drawPings(time, colors)
-    this.drawClickDotRings(time)
+  private drawSpine(now: number, progress: number, palette: Palette) {
+    const lines = this.board?.spine
+    if (!this.spinePath || !lines) return
+    const ctx = this.ctx
+    const { signalSat: sat, signalLight: light } = palette
+    const top = Math.min(...lines.map((l) => l.points[1])) - 20
 
+    ctx.save()
+    ctx.beginPath()
+    ctx.rect(0, top, this.docW, Math.max(0, progress - top))
+    ctx.clip()
+    ctx.lineWidth = SPINE.width
+    ctx.strokeStyle = hsla(HUE.from + 8, sat, light, palette.additive ? 0.4 : 0.5)
+    ctx.stroke(this.spinePath)
+    if (!this.reduced) {
+      ctx.setLineDash(SPINE.dash)
+      ctx.lineDashOffset = -now * SPINE.flow
+      ctx.lineWidth = 2
+      ctx.strokeStyle = hsla(HUE.from + 4, sat, light + 16, 0.95)
+      ctx.stroke(this.spinePath)
+      ctx.setLineDash([])
+    }
     ctx.restore()
 
-    if (this.pointerX !== null && this.pointerY !== null) {
-      this.drawHoverGlow(this.pointerX, this.pointerY, this.hoverGlowStrength)
+    for (const line of lines) {
+      if (progress > line.top && progress < line.bottom) {
+        this.sprites.draw(ctx, HUE.from, light, line.x, progress, 16, palette.glowAlpha)
+      }
     }
+  }
 
-    this.animationFrame = requestAnimationFrame(this.render)
+  private maintainPulses(now: number, top: number, bottom: number) {
+    const target = clamp(
+      Math.round((this.vw * this.vh) / PULSE.perArea),
+      PULSE.min,
+      this.coarse ? PULSE.min + 6 : PULSE.max,
+    )
+    const budget = this.lowPower ? Math.ceil(target / 2) : target
+    for (let attempt = 0; attempt < 4 && this.pulses.count < budget; attempt++) {
+      const node = this.randomNodeBetween(top, bottom)
+      if (node >= 0) this.pulses.spawn(node, now)
+    }
+  }
+
+  private randomNodeBetween(top: number, bottom: number): number {
+    const graph = this.board?.graph
+    if (!graph) return -1
+    const y = top + Math.random() * (bottom - top)
+    const bucket = this.nodeBuckets[Math.floor(y / BOARD.chunkHeight)]
+    if (!bucket?.length) return -1
+    const node = bucket[Math.floor(Math.random() * bucket.length)]
+    const ny = graph.nodeY[node]
+    return ny >= top - 40 && ny <= bottom + 40 ? node : -1
+  }
+
+  private drawCursorGlow(palette: Palette) {
+    const p = this.pointer
+    if (!p || !p.fine || this.glow < 0.01) return
+    const ctx = this.ctx
+    const R = 170
+    const g = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, R)
+    const alpha = (palette.additive ? 0.12 : 0.07) * this.glow
+    const hue = (HUE.from + HUE.to) / 2
+    g.addColorStop(0, hsla(hue, 100, 60, alpha))
+    g.addColorStop(1, hsla(hue, 100, 60, 0))
+    ctx.fillStyle = g
+    ctx.fillRect(p.x - R, p.y - R, R * 2, R * 2)
+  }
+
+  private nearestNode(wx: number, wy: number, radius: number): number {
+    const board = this.board
+    if (!board) return -1
+    const cx = Math.round(wx / board.cell)
+    const cy = Math.round(wy / board.cell)
+    let best = -1
+    let bestD = Infinity
+    for (let dy = -radius; dy <= radius; dy++) {
+      const y = cy + dy
+      if (y < 0 || y >= board.rows) continue
+      for (let dx = -radius; dx <= radius; dx++) {
+        const x = cx + dx
+        if (x < 0 || x >= board.cols) continue
+        const node = board.nodeOf[y * board.cols + x]
+        if (node < 0 || !board.graph.adj[node].length) continue
+        const d = dx * dx + dy * dy
+        if (d < bestD) {
+          bestD = d
+          best = node
+        }
+      }
+    }
+    return best
+  }
+
+  private cardFrom(target: EventTarget | null): CardVisual | null {
+    const el = target instanceof Element ? target.closest('[data-chip]') : null
+    return el ? (this.cards.find((c) => c.chip.spec.el === el) ?? null) : null
+  }
+
+  private setHovered(card: CardVisual | null) {
+    if (card === this.hovered) return
+    this.hovered = card
+    this.dirty = true
+    if (!card) return
+    const now = performance.now()
+    this.powerOn(card, now)
+    this.lastHoverWave = now
+    if (this.reduced) return
+    this.addWave(this.hoverEdges(card), WAVE.hover, true, now)
+    const p = this.pointer
+    const from = p ? distanceAt(card.border, p.x, p.y + this.boardScroll()) : card.tapPort
+    this.launchComets(card, from, now)
+  }
+
+  private handleScroll = () => {
+    this.pageScroll = window.scrollY
   }
 
   private handleResize = () => {
-    window.clearTimeout(this.resizeTimeout)
-    this.resizeTimeout = window.setTimeout(this.setup, 200)
+    this.measure()
+    this.scheduleRegen()
+  }
+
+  private watchFrameBudget(interval: number) {
+    if (this.lowPower || this.boot || interval <= 0 || interval > FRAME_BUDGET.ignoreAbove) return
+    this.sampled++
+    if (interval > FRAME_BUDGET.slowFrame) this.slow++
+    if (this.sampled < FRAME_BUDGET.window) return
+    if (this.slow / this.sampled > FRAME_BUDGET.slowShare) this.enterLowPower()
+    this.sampled = 0
+    this.slow = 0
+  }
+
+  private enterLowPower() {
+    this.lowPower = true
+    this.measure()
+    if (this.chunks.length) {
+      this.boardTiles = new TileLayer(this.chunks, this.docW, BOARD.chunkHeight, this.dpr)
+    }
   }
 
   private handleVisibility = () => {
     if (document.hidden) {
-      cancelAnimationFrame(this.animationFrame)
+      cancelAnimationFrame(this.raf)
     } else {
-      this.lastTime = 0
-      this.animationFrame = requestAnimationFrame(this.render)
+      this.last = 0
+      this.sampled = 0
+      this.slow = 0
+      this.dirty = true
+      this.raf = requestAnimationFrame(this.frame)
     }
   }
 
   private handlePointerMove = (e: PointerEvent) => {
-    this.pointerX = e.clientX
-    this.pointerY = e.clientY
+    const fine = e.pointerType === 'mouse' || e.pointerType === 'pen'
+    this.pointer = { x: e.clientX, y: e.clientY, fine }
+    this.dirty = true
+    if (!fine || this.reduced || !this.booted) return
+
+    const now = performance.now()
+    const moved = Math.hypot(e.clientX - this.lastSpawnX, e.clientY - this.lastSpawnY)
+    if (now - this.lastSpawn < PULSE.hoverInterval || moved < PULSE.hoverDistance) return
+    this.lastSpawn = now
+    this.lastSpawnX = e.clientX
+    this.lastSpawnY = e.clientY
+    const node = this.nearestNode(e.clientX, e.clientY + this.boardScroll(), 5)
+    if (node >= 0) this.pulses.spawn(node, now, 1.4, HUE.from + Math.random() * 20)
+  }
+
+  private handlePointerDown = (e: PointerEvent) => {
+    if (e.button !== 0 || this.reduced || !this.board || !this.booted) return
+    const now = performance.now()
+    const wx = e.clientX
+    const wy = e.clientY + this.boardScroll()
+    let node = this.nearestNode(wx, wy, 10)
+    if (node < 0) node = this.nearestNode(wx, wy, 24)
+    if (node < 0) return
+    this.addWave(graphWave(this.board.graph, [node], WAVE.click.maxD), WAVE.click, false, now)
+    for (let i = 0; i < 4; i++) this.pulses.spawn(node, now, 1.8)
   }
 
   private handlePointerLeave = () => {
-    this.pointerX = null
-    this.pointerY = null
+    this.pointer = null
+    this.setHovered(null)
+    this.dirty = true
   }
 
-  private handleClick = (e: MouseEvent) => {
-    const time = performance.now()
-    this.clickBursts.push({ x: e.clientX, y: e.clientY, start: time })
-    if (!this.prefersReducedMotion) {
-      this.spawnClickDots(e.clientX, e.clientY, THEME_COLORS[this.getTheme()], time)
-    }
-  }
+  private handlePointerOver = (e: PointerEvent) => this.setHovered(this.cardFrom(e.target))
+  private handleFocusIn = (e: FocusEvent) => this.setHovered(this.cardFrom(e.target))
+  private handleFocusOut = (e: FocusEvent) => this.setHovered(this.cardFrom(e.relatedTarget))
 }

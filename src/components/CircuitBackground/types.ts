@@ -1,58 +1,102 @@
-import type { CircuitPath } from './circuitGenerator'
-
-export interface Pulse {
-  distance: number
-  speed: number
-  colorWaveLength: number
-  colorPhase: number
+export interface Rect {
+  left: number
+  top: number
+  right: number
+  bottom: number
 }
 
-export interface LiveCircuit {
-  sectorX: number
-  sectorY: number
-  path: CircuitPath
-  pulse: Pulse
-  age: number
-  fadeInDuration: number
-  activeDuration: number
-  fadeOutDuration: number
-  influence: number
+export type PinLayout = 'lr' | 'tb' | 'all' | 'none'
+
+export interface ChipSpec extends Rect {
+  el: HTMLElement
+  ref: string
+  pins: PinLayout
+  hero: boolean
+  bare: boolean
+  radius: number
 }
 
-export interface Ping {
+export type Side = 0 | 1 | 2 | 3
+
+export interface ChipPin {
   x: number
   y: number
-  start: number
-  colorT: number
+  ex: number
+  ey: number
+  side: Side
+  node: number
 }
 
-export interface ClickDot {
+export interface BoardChip {
+  spec: ChipSpec
+  pins: ChipPin[]
+  pinNodes: number[]
+  tap: number[] | null
+  tapY: number | null
+}
+
+export interface Trace {
+  points: number[]
+  width: number
+}
+
+export interface Via {
   x: number
   y: number
-  start: number
-  hue: number
-  sat: number
-  light: number
-  startRadius: number
-  maxRadius: number
-  baseOpacity: number
 }
 
-export interface ClickBurst {
+export interface Part {
   x: number
   y: number
-  start: number
+  w: number
+  h: number
+  pin1: boolean
 }
 
-export interface ThemeColorConfig {
-  hueFrom: number
-  hueTo: number
-  saturation: number
-  lightness: number
+export interface Pad {
+  x: number
+  y: number
+  w: number
+  h: number
 }
 
-export interface HslColor {
-  hue: number
-  sat: number
-  light: number
+export interface Label {
+  x: number
+  y: number
+  text: string
+  align: CanvasTextAlign
+  size: number
+}
+
+export interface SpineLine {
+  points: number[]
+  x: number
+  top: number
+  bottom: number
+}
+
+export interface Graph {
+  nodeX: number[]
+  nodeY: number[]
+  adj: number[][]
+}
+
+export interface LayerData {
+  traces: Trace[]
+  vias: Via[]
+  parts?: Part[]
+  pads?: Pad[]
+  labels?: Label[]
+}
+
+export interface BoardData extends LayerData {
+  width: number
+  height: number
+  cell: number
+  cols: number
+  rows: number
+  nodeOf: Int32Array
+  graph: Graph
+  chips: BoardChip[]
+  spine: SpineLine[] | null
 }
