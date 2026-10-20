@@ -41,6 +41,7 @@ interface CardVisual {
   flash: number
   halo: HTMLCanvasElement | null
   haloTheme: Theme | null
+  shown: number
 }
 
 interface Comet {
@@ -112,7 +113,16 @@ function buildCardVisual(chip: BoardChip): CardVisual {
     flash: 0,
     halo: null,
     haloTheme: null,
+    shown: 0,
   }
+}
+
+function isShown(el: HTMLElement): boolean {
+  return (
+    !el.classList.contains('rv-fade') ||
+    el.classList.contains('seen') ||
+    !document.documentElement.classList.contains('reveal')
+  )
 }
 
 function renderHalo(spec: ChipSpec, palette: Palette): HTMLCanvasElement {
@@ -357,6 +367,7 @@ export class CircuitEngine {
     this.observeLayout()
     for (const card of this.cards) {
       if (this.powered.has(card.chip.spec.ref)) card.glow = CARD.baseGlow
+      if (isShown(card.chip.spec.el)) card.shown = 1
     }
     this.spinePath = board.spine ? pathFrom(board.spine.map((line) => line.points)) : null
     this.pulses.reset(board.graph)
@@ -442,7 +453,7 @@ export class CircuitEngine {
     const progress = scrollY + this.vh * SPINE.progress
     for (const card of this.cards) {
       const { chip } = card
-      if (this.powered.has(chip.spec.ref)) continue
+      if (this.powered.has(chip.spec.ref) || !isShown(chip.spec.el)) continue
       const ready =
         this.board.spine && chip.tapY !== null
           ? chip.tapY <= progress
@@ -633,7 +644,8 @@ export class CircuitEngine {
         (card === this.hovered ? CARD.hoverGlow : 0)
       card.glow += (target - card.glow) * ease
       card.flash *= decay
-      const alpha = Math.min(1, card.glow + card.flash * 0.55) * palette.halo
+      card.shown += ((isShown(spec.el) ? 1 : 0) - card.shown) * ease
+      const alpha = Math.min(1, card.glow + card.flash * 0.55) * card.shown * palette.halo
       if (alpha < 0.01 || spec.bottom + pad < top || spec.top - pad > bottom) continue
       if (!card.halo || card.haloTheme !== theme) {
         card.halo = renderHalo(spec, palette)

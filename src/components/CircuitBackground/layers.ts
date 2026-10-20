@@ -166,6 +166,8 @@ export function drawChunks(
   }
 }
 
+const TILE_MARGIN = 3
+
 export class TileLayer {
   private readonly tiles = new Map<number, HTMLCanvasElement>()
   private readonly chunks: Chunk[]
@@ -203,8 +205,12 @@ export class TileLayer {
       }
       ctx.drawImage(tile, 0, i * h, this.width, h)
     }
+    const ahead = [last + 1, first - 1, last + 2, first - 2].find(
+      (i) => i >= 0 && i < this.chunks.length && !this.tiles.has(i),
+    )
+    if (ahead !== undefined) this.tiles.set(ahead, this.render(ahead, style))
     for (const key of this.tiles.keys()) {
-      if (key < first - 1 || key > last + 1) this.tiles.delete(key)
+      if (key < first - TILE_MARGIN || key > last + TILE_MARGIN) this.tiles.delete(key)
     }
   }
 
