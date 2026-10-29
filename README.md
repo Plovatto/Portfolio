@@ -62,7 +62,7 @@ Personal portfolio of Pandora Becker Lovatto, full stack developer. The page is 
 - [TypeScript](https://www.typescriptlang.org/)
 - [Vite](https://vite.dev/)
 - [i18next](https://www.i18next.com/) and [react-i18next](https://react.i18next.com/)
-- [Vitest](https://vitest.dev/) for unit tests
+- [Vitest](https://vitest.dev/) and [fast-check](https://fast-check.dev/) for unit and property-based tests
 - [Cloudflare Workers](https://workers.cloudflare.com/), [Resend](https://resend.com/) and [Turnstile](https://www.cloudflare.com/products/turnstile/) for the contact form
 - [oxlint](https://oxc.rs/) and [Prettier](https://prettier.io/) for linting and formatting
 
