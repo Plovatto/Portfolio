@@ -158,6 +158,7 @@ The site is published to GitHub Pages and the contact Worker to Cloudflare, both
 | `tests.yml`         | pull requests and pushes to `main`    | unit tests for the site and the worker                                         |
 | `deploy-site.yml`   | pushes to `main` (outside `worker/`)  | lint, tests, build and deploy to GitHub Pages                                  |
 | `deploy-worker.yml` | pushes to `main` that touch `worker/` | typecheck, tests and `wrangler deploy`                                         |
+| `scorecard.yml`     | pushes to `main` and weekly           | OpenSSF Scorecard security analysis                                            |
 
 Production builds use the `/portfolio/` base path; override it with `VITE_BASE`.
 
@@ -167,6 +168,10 @@ One-time setup in the repository settings:
 2. **Secrets and variables → Actions → Variables:** `VITE_CONTACT_ENDPOINT` and `VITE_TURNSTILE_SITE_KEY`. Both end up in the public bundle, so they are variables, not secrets.
 3. **Secrets:** `CLOUDFLARE_API_TOKEN` (template "Edit Cloudflare Workers") and `CLOUDFLARE_ACCOUNT_ID`, used only by the worker deploy. The worker's own secrets (`CONTACT_TO`, `RESEND_API_KEY`, `TURNSTILE_SECRET`) stay in Cloudflare.
 4. **Cloudflare Turnstile:** add `plovatto.github.io` to the widget hostnames.
+
+## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md). Security problems should be reported as described in [SECURITY.md](SECURITY.md).
 
 ## License
 
