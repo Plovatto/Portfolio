@@ -5,6 +5,7 @@
 [![Deploy](https://github.com/Plovatto/Portfolio/actions/workflows/deploy-site.yml/badge.svg)](https://github.com/Plovatto/Portfolio/actions/workflows/deploy-site.yml)
 [![CodeQL](https://github.com/Plovatto/Portfolio/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/Plovatto/Portfolio/security/code-scanning)
 [![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/Plovatto/Portfolio/badge)](https://scorecard.dev/viewer/?uri=github.com/Plovatto/Portfolio)
+[![OpenSSF Best Practices](https://www.bestpractices.dev/projects/16066/badge)](https://www.bestpractices.dev/projects/16066)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
 Personal portfolio of Pandora Becker Lovatto, full stack developer. The page is a living circuit board built with React, TypeScript and Vite: every section is mounted as a chip on a procedurally routed PCB, inside an interface that looks and behaves like a code editor.
