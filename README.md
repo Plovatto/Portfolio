@@ -1,13 +1,13 @@
 # Pandora Lovatto · Portfolio
 
-[![CI](https://github.com/Plovatto/portfolio/actions/workflows/ci.yml/badge.svg)](https://github.com/Plovatto/portfolio/actions/workflows/ci.yml)
-[![Tests](https://github.com/Plovatto/portfolio/actions/workflows/tests.yml/badge.svg)](https://github.com/Plovatto/portfolio/actions/workflows/tests.yml)
-[![Deploy](https://github.com/Plovatto/portfolio/actions/workflows/deploy-site.yml/badge.svg)](https://github.com/Plovatto/portfolio/actions/workflows/deploy-site.yml)
+[![CI](https://github.com/Plovatto/Portfolio/actions/workflows/ci.yml/badge.svg)](https://github.com/Plovatto/Portfolio/actions/workflows/ci.yml)
+[![Tests](https://github.com/Plovatto/Portfolio/actions/workflows/tests.yml/badge.svg)](https://github.com/Plovatto/Portfolio/actions/workflows/tests.yml)
+[![Deploy](https://github.com/Plovatto/Portfolio/actions/workflows/deploy-site.yml/badge.svg)](https://github.com/Plovatto/Portfolio/actions/workflows/deploy-site.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
 Personal portfolio of Pandora Becker Lovatto, full stack developer. The page is a living circuit board built with React, TypeScript and Vite: every section is mounted as a chip on a procedurally routed PCB, inside an interface that looks and behaves like a code editor.
 
-**Live site:** https://plovatto.github.io/portfolio/
+**Live site:** https://plovatto.github.io/Portfolio/
 
 <p align="center">
   <img src="docs/screenshots/hero.webp" alt="Hero with the copper nameplate, the interactive terminal and the circuit board background" width="900">
@@ -78,13 +78,13 @@ Personal portfolio of Pandora Becker Lovatto, full stack developer. The page is 
 Clone the repository:
 
 ```bash
-git clone https://github.com/Plovatto/portfolio.git
+git clone https://github.com/Plovatto/Portfolio.git
 ```
 
 Go to the project folder:
 
 ```bash
-cd portfolio
+cd Portfolio
 ```
 
 Install the dependencies:
@@ -160,7 +160,7 @@ The site is published to GitHub Pages and the contact Worker to Cloudflare, both
 | `deploy-worker.yml` | pushes to `main` that touch `worker/` | typecheck, tests and `wrangler deploy`                                         |
 | `scorecard.yml`     | pushes to `main` and weekly           | OpenSSF Scorecard security analysis                                            |
 
-Production builds use the `/portfolio/` base path; override it with `VITE_BASE`.
+Production builds use the `/Portfolio/` base path; override it with `VITE_BASE`.
 
 One-time setup in the repository settings:
 

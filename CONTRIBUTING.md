@@ -2,7 +2,7 @@
 
 ## Reporting issues
 
-Open an [issue](https://github.com/Plovatto/portfolio/issues) describing the problem, the steps to reproduce it and the expected behavior. Security problems must be reported through the [security policy](SECURITY.md).
+Open an [issue](https://github.com/Plovatto/Portfolio/issues) describing the problem, the steps to reproduce it and the expected behavior. Security problems must be reported through the [security policy](SECURITY.md).
 
 ## Submitting changes
 
