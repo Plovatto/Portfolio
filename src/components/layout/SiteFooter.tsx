@@ -16,6 +16,7 @@ export function SiteFooter() {
       <div className="wrap">
         <span>{t('footer.copyright', { year: CURRENT_YEAR })}</span>
         <nav aria-label={t('footer.label')}>
+          <a href={`mailto:${PROFILE.email}`}>{PROFILE.email}</a>
           <a href={PROFILE.github}>GitHub</a>
           {PROFILE.linkedin ? <a href={PROFILE.linkedin}>LinkedIn</a> : null}
           <a href={privacyUrl()}>{t('footer.privacy')}</a>

@@ -3,6 +3,7 @@ export const PROFILE = {
   fullName: 'Pandora Becker Lovatto',
   monogram: 'PL',
   boardLabel: 'PANDORA LOVATTO  FULL STACK  REV B  2026',
+  email: 'pandora@plovatto.dev',
   github: 'https://github.com/Plovatto',
   linkedin: 'https://www.linkedin.com/in/pandora-becker-lovatto-877169290',
   resume: 'pandora-becker-lovatto-curriculo.pdf',
