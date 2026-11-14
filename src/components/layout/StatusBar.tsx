@@ -1,6 +1,7 @@
 import { useTranslation } from 'react-i18next'
 import type { SectionId } from '../../constants/navigation'
 import { PROFILE } from '../../constants/profile'
+import { track } from '../../lib/analytics'
 import { Icon } from '../ui/Icon'
 
 interface StatusBarProps {
@@ -23,6 +24,7 @@ export function StatusBar({ active, build }: StatusBarProps) {
         className="status-resume"
         href={`${import.meta.env.BASE_URL}${PROFILE.resume}`}
         download
+        onClick={() => track('resume_download')}
         aria-label={t('statusBar.resumeLabel')}
       >
         <Icon name="download" />

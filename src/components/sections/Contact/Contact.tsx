@@ -3,6 +3,7 @@ import type { ChangeEvent, CSSProperties, FormEvent } from 'react'
 import { useTranslation } from 'react-i18next'
 import { prefersReducedMotion } from '../../../hooks/useReducedMotion'
 import { useReveal } from '../../../hooks/useReveal'
+import { track } from '../../../lib/analytics'
 import { classifyFailure, sendContact, validateContact } from '../../../lib/contact'
 import { getTurnstileToken } from '../../../lib/turnstile'
 import type {
@@ -114,6 +115,7 @@ export function Contact({ onSent }: ContactProps) {
       setValues(EMPTY)
       setStatus('ok')
       onSent()
+      track('contact_form_submit')
     } catch (error) {
       if (import.meta.env.DEV) {
         console.error('[contact]', error)

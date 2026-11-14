@@ -2,6 +2,7 @@ import { memo, useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { CircuitBackground } from './components/CircuitBackground/CircuitBackground'
 import { ActivityBar } from './components/layout/ActivityBar'
+import { ConsentBanner } from './components/layout/ConsentBanner'
 import { EditorTabs } from './components/layout/EditorTabs'
 import { SiteFooter } from './components/layout/SiteFooter'
 import { StatusBar } from './components/layout/StatusBar'
@@ -63,6 +64,7 @@ function App() {
       <a className="skip-link" href="#main">
         {t('nav.skip')}
       </a>
+      <ConsentBanner />
       <CircuitBackground label={PROFILE.boardLabel} active={powered} />
       <ActivityBar active={active} />
       <EditorTabs active={active} messageSent={messageSent} />

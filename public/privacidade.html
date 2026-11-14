@@ -1,0 +1,289 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta
+      name="description"
+      content="Como o portfólio de Pandora Becker Lovatto trata dados: Google Analytics, Microsoft Clarity e formulário de contato."
+    />
+    <meta name="theme-color" content="#f6f6fb" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#07061a" media="(prefers-color-scheme: dark)" />
+    <title>Privacidade · Pandora Becker Lovatto</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+    <link rel="canonical" href="https://plovatto.dev/privacidade.html" />
+    <script>
+      try {
+        const stored = localStorage.getItem('portfolio-theme')
+        document.documentElement.dataset.theme =
+          stored === 'light' || stored === 'dark'
+            ? stored
+            : matchMedia('(prefers-color-scheme: dark)').matches
+              ? 'dark'
+              : 'light'
+      } catch {}
+    </script>
+    <style>
+      :root {
+        --bg: #f6f6fb;
+        --text: #14123a;
+        --muted: #4c4874;
+        --border: rgb(54 46 150 / 0.13);
+        --signal: #4a35dc;
+        --surface: #fff;
+        color-scheme: light;
+      }
+
+      :root[data-theme='dark'] {
+        --bg: #07061a;
+        --text: #f4f1ff;
+        --muted: #aba4d9;
+        --border: rgb(124 92 255 / 0.2);
+        --signal: #8f73ff;
+        --surface: #110e2d;
+        color-scheme: dark;
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+      }
+
+      body {
+        background: var(--bg);
+        color: var(--muted);
+        font:
+          1rem/1.7 system-ui,
+          -apple-system,
+          'Segoe UI',
+          sans-serif;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      main {
+        max-width: 44rem;
+        margin: 0 auto;
+        padding: 2.5rem 1.25rem 4rem;
+      }
+
+      nav {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem 1.25rem;
+        margin-bottom: 2.5rem;
+        font-size: 0.9rem;
+      }
+
+      a {
+        color: var(--text);
+        text-decoration-color: var(--signal);
+        text-underline-offset: 0.25em;
+      }
+
+      :focus-visible {
+        outline: 2px solid var(--signal);
+        outline-offset: 3px;
+        border-radius: 2px;
+      }
+
+      section {
+        scroll-margin-top: 1.5rem;
+      }
+
+      section + section {
+        margin-top: 3.5rem;
+        padding-top: 3rem;
+        border-top: 1px solid var(--border);
+      }
+
+      h1 {
+        margin-bottom: 0.4rem;
+        color: var(--text);
+        font-size: 1.9rem;
+        line-height: 1.2;
+        text-wrap: balance;
+      }
+
+      h2 {
+        margin: 2.2rem 0 0.5rem;
+        color: var(--text);
+        font-size: 1.1rem;
+      }
+
+      p + p {
+        margin-top: 0.8rem;
+      }
+
+      ul {
+        margin-top: 0.6rem;
+        padding-left: 1.2rem;
+      }
+
+      li + li {
+        margin-top: 0.35rem;
+      }
+
+      .updated {
+        font-size: 0.875rem;
+      }
+
+      code {
+        padding: 0.1em 0.35em;
+        border: 1px solid var(--border);
+        border-radius: 4px;
+        background: var(--surface);
+        font:
+          0.875em ui-monospace,
+          'Cascadia Code',
+          Consolas,
+          monospace;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <nav aria-label="Navegação / Navigation">
+        <a href="./">← plovatto.dev</a>
+        <a href="#pt">Português</a>
+        <a href="#en" lang="en">English</a>
+      </nav>
+
+      <section id="pt" lang="pt-BR">
+        <h1>Privacidade</h1>
+        <p class="updated">Atualizada em 14 de novembro de 2026.</p>
+
+        <p>
+          Este é o portfólio pessoal de Pandora Becker Lovatto, responsável pelo tratamento dos
+          dados descritos aqui. O site não tem cadastro nem login e funciona normalmente se você
+          recusar os cookies.
+        </p>
+
+        <h2>Medição de acessos (Google Analytics 4)</h2>
+        <p>
+          Se você aceitar no aviso de cookies, o site carrega o Google Analytics 4 para contar
+          visitas e entender quais partes são mais usadas. Ele registra dados como páginas vistas,
+          tempo de visita, tipo de dispositivo, navegador, localização aproximada e três ações:
+          envio do formulário de contato, download do currículo e cliques nos links dos projetos.
+          Usa cookies como <code>_ga</code>. Os sinais de publicidade ficam sempre desativados.
+        </p>
+
+        <h2>Mapa de calor (Microsoft Clarity)</h2>
+        <p>
+          Também só com o seu aceite, o Microsoft Clarity registra como a página é usada: cliques,
+          rolagem, movimento do cursor e uma reprodução da sessão, para gerar mapas de calor. Usa
+          cookies como <code>_clck</code> e <code>_clsk</code>. Por padrão, o Clarity mascara o que
+          é digitado em campos de formulário.
+        </p>
+
+        <h2>Consentimento</h2>
+        <p>
+          Nenhuma dessas ferramentas é carregada antes de você aceitar. A sua escolha fica guardada
+          no seu navegador e pode ser alterada quando quiser no link "Cookies" do rodapé do site. Ao
+          recusar depois de ter aceitado, a medição para e os cookies dessas ferramentas são
+          apagados.
+        </p>
+
+        <h2>Formulário de contato</h2>
+        <p>
+          Ao enviar o formulário, o nome, o e-mail e a mensagem que você escreveu são entregues por
+          e-mail à Pandora e usados apenas para responder ao seu contato. O envio passa por um
+          serviço na Cloudflare e é entregue pelo Resend. Antes disso, o Cloudflare Turnstile
+          verifica se o envio vem de uma pessoa e, para isso, trata dados técnicos como o endereço
+          IP. O site não guarda as mensagens em banco de dados.
+        </p>
+
+        <h2>Preferências guardadas no navegador</h2>
+        <p>
+          O tema (claro ou escuro), o idioma e a sua escolha sobre cookies ficam no armazenamento
+          local do navegador. Eles não são enviados a ninguém e somem quando você limpa os dados do
+          site.
+        </p>
+
+        <h2>Com quem os dados são compartilhados</h2>
+        <ul>
+          <li>GitHub, que hospeda o site e pode registrar o endereço IP dos acessos.</li>
+          <li>Google (Analytics) e Microsoft (Clarity), somente com o seu consentimento.</li>
+          <li>Cloudflare e Resend, somente quando você envia o formulário de contato.</li>
+        </ul>
+        <p>
+          Essas empresas podem tratar os dados fora do Brasil. Os dados não são vendidos nem usados
+          para publicidade.
+        </p>
+
+        <h2>Seus direitos</h2>
+        <p>
+          Pela LGPD, você pode pedir confirmação, acesso, correção ou exclusão dos seus dados e
+          retirar o consentimento a qualquer momento. Para isso, use o
+          <a href="./#contact">formulário de contato</a> do site.
+        </p>
+      </section>
+
+      <section id="en" lang="en">
+        <h1>Privacy</h1>
+        <p class="updated">Updated on November 14, 2026.</p>
+
+        <p>
+          This is the personal portfolio of Pandora Becker Lovatto, who is responsible for the data
+          processing described here. The site has no accounts or login and works normally if you
+          decline cookies.
+        </p>
+
+        <h2>Traffic measurement (Google Analytics 4)</h2>
+        <p>
+          If you accept in the cookie notice, the site loads Google Analytics 4 to count visits and
+          understand which parts are used the most. It records data such as pages viewed, visit
+          duration, device type, browser, approximate location and three actions: sending the
+          contact form, downloading the résumé and clicking project links. It uses cookies such as
+          <code>_ga</code>. Advertising signals are always kept off.
+        </p>
+
+        <h2>Heatmaps (Microsoft Clarity)</h2>
+        <p>
+          Also only with your acceptance, Microsoft Clarity records how the page is used: clicks,
+          scrolling, cursor movement and a session replay, to build heatmaps. It uses cookies such
+          as <code>_clck</code> and <code>_clsk</code>. By default, Clarity masks what is typed into
+          form fields.
+        </p>
+
+        <h2>Consent</h2>
+        <p>
+          Neither tool is loaded before you accept. Your choice is stored in your browser and can be
+          changed at any time through the "Cookies" link in the site footer. If you decline after
+          having accepted, measurement stops and the cookies from these tools are deleted.
+        </p>
+
+        <h2>Contact form</h2>
+        <p>
+          When you send the form, the name, e-mail and message you wrote are delivered by e-mail to
+          Pandora and used only to reply to you. The submission goes through a service on Cloudflare
+          and is delivered by Resend. Before that, Cloudflare Turnstile checks that the submission
+          comes from a person and, to do so, processes technical data such as the IP address. The
+          site does not keep messages in a database.
+        </p>
+
+        <h2>Preferences stored in the browser</h2>
+        <p>
+          The theme (light or dark), the language and your cookie choice are kept in the browser's
+          local storage. They are not sent to anyone and disappear when you clear the site data.
+        </p>
+
+        <h2>Who the data is shared with</h2>
+        <ul>
+          <li>GitHub, which hosts the site and may log the IP address of visits.</li>
+          <li>Google (Analytics) and Microsoft (Clarity), only with your consent.</li>
+          <li>Cloudflare and Resend, only when you send the contact form.</li>
+        </ul>
+        <p>
+          These companies may process data outside Brazil. Data is not sold or used for advertising.
+        </p>
+
+        <h2>Your rights</h2>
+        <p>
+          Under the LGPD, the Brazilian data protection law, you can ask for confirmation, access,
+          correction or deletion of your data and withdraw consent at any time. To do so, use the
+          site's <a href="./#contact">contact form</a>.
+        </p>
+      </section>
+    </main>
+  </body>
+</html>

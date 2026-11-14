@@ -56,6 +56,7 @@ Personal portfolio of Pandora Becker Lovatto, full stack developer. The page is 
 - Career rendered as a git commit graph, with a `git show` diff for every period
 - Contact form with a live request preview, human verification and delivery feedback, sent through a Cloudflare Worker
 - Portuguese and English, detected from the browser, with an animated language switch
+- Privacy first analytics: Google Analytics 4 and Microsoft Clarity load only after the visitor accepts the cookie notice, with Consent Mode v2 denied by default and a privacy page in both languages
 - Light and dark themes, custom cursors, résumé download and a tab title that marks unsaved changes while you are away
 - Accessible and fast: skip link, reduced motion support, self-hosted fonts, responsive images and a low-power mode for slow devices
 
@@ -104,8 +105,10 @@ Copy `.env.example` to `.env.local` and fill in:
 | ------------------------- | ----------------------------------------------------------------------------------- |
 | `VITE_CONTACT_ENDPOINT`   | URL of the contact Worker (see [`worker/README.md`](worker/README.md))              |
 | `VITE_TURNSTILE_SITE_KEY` | Public Turnstile site key; the example value is Cloudflare's test key, which passes |
+| `VITE_GA_ID`              | Google Analytics 4 measurement ID (`G-XXXXXXX`); optional                           |
+| `VITE_CLARITY_ID`         | Microsoft Clarity project ID; optional                                              |
 
-Without an endpoint the form still validates, and sending shows an error.
+Without an endpoint the form still validates, and sending shows an error. Without the analytics IDs nothing is loaded and the cookie notice never appears.
 
 ### Running
 
@@ -139,14 +142,14 @@ src/
 │  └─ ui/                  # Chip, Icon, SectionHead, SectionDivider, WindowDialog
 ├─ constants/              # profile, projects, stack, experience and navigation data
 ├─ context/                # theme context
-├─ hooks/                  # useTheme, useReveal, useActiveSection, useReducedMotion
-├─ lib/                    # contact, turnstile, typewriter, scramble, tween and other helpers
+├─ hooks/                  # useTheme, useReveal, useActiveSection, useReducedMotion, useConsent
+├─ lib/                    # contact, turnstile, consent, analytics, typewriter and other helpers
 ├─ locales/                # Portuguese and English translations
 ├─ styles/index.css        # design tokens, base styles and entrance motion
 ├─ i18n.ts
 ├─ App.tsx
 └─ main.tsx
-public/                    # icons, résumé, project images, social preview, sitemap, robots, llms.txt, 404
+public/                    # icons, résumé, project images, social preview, sitemap, robots, llms.txt, privacy page, 404
 worker/                    # Cloudflare Worker that delivers the contact e-mail
 docs/screenshots/          # images used in this README
 ```
@@ -167,8 +170,8 @@ The site is served from the root of `plovatto.dev`, so the deploy workflow build
 
 One-time setup in the repository settings:
 
-1. **Pages → Source:** GitHub Actions.
-2. **Secrets and variables → Actions → Variables:** `VITE_CONTACT_ENDPOINT` and `VITE_TURNSTILE_SITE_KEY`. Both end up in the public bundle, so they are variables, not secrets.
+1. **Pages → Source:** GitHub Actions, with `plovatto.dev` as the custom domain and HTTPS enforced.
+2. **Secrets and variables → Actions → Variables:** `VITE_CONTACT_ENDPOINT`, `VITE_TURNSTILE_SITE_KEY` and, to enable analytics, `VITE_GA_ID` and `VITE_CLARITY_ID`. All of them end up in the public bundle, so they are variables, not secrets.
 3. **Secrets:** `CLOUDFLARE_API_TOKEN` (template "Edit Cloudflare Workers") and `CLOUDFLARE_ACCOUNT_ID`, used only by the worker deploy. The worker's own secrets (`CONTACT_TO`, `RESEND_API_KEY`, `TURNSTILE_SECRET`) stay in Cloudflare.
 4. **Cloudflare Turnstile:** add `plovatto.dev` to the widget hostnames.
 

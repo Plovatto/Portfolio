@@ -304,7 +304,17 @@
     }
   },
   "footer": {
-    "copyright": "© {{year}} Pandora Becker Lovatto"
+    "copyright": "© {{year}} Pandora Becker Lovatto",
+    "label": "Rodapé",
+    "privacy": "Privacidade",
+    "cookies": "Cookies"
+  },
+  "consent": {
+    "title": "Cookies",
+    "text": "Com a sua permissão, uso o Google Analytics e o Microsoft Clarity para entender como o site é usado. Nada é carregado se você recusar.",
+    "privacy": "Política de privacidade",
+    "accept": "Aceitar",
+    "decline": "Recusar"
   },
   "window": {
     "close": "fechar"
