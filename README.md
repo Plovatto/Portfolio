@@ -55,7 +55,7 @@ Personal portfolio of Pandora Becker Lovatto, full stack developer. The page is 
 - The stack as an exploded chip that separates layer by layer while pinned
 - Career rendered as a git commit graph, with a `git show` diff for every period
 - Contact form with a live request preview, human verification and delivery feedback, sent through a Cloudflare Worker
-- Portuguese and English, detected from the browser, with an animated language switch
+- Portuguese at `/` and English at `/en/`, each with its own title, description, canonical, `hreflang` and JSON-LD generated at build time, plus an animated language switch that keeps the URL in sync
 - Privacy first analytics: Google Analytics 4 and Microsoft Clarity load only after the visitor accepts the cookie notice, with Consent Mode v2 denied by default and a privacy page in both languages
 - Light and dark themes, custom cursors, résumé download and a tab title that marks unsaved changes while you are away
 - Accessible and fast: skip link, reduced motion support, self-hosted fonts, responsive images and a low-power mode for slow devices

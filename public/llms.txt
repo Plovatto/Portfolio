@@ -19,7 +19,8 @@ Pandora Becker Lovatto is a full stack developer based in Brazil, working as a c
 
 ## Links
 
-- [Site](https://plovatto.dev/)
+- [Site (Português)](https://plovatto.dev/)
+- [Site (English)](https://plovatto.dev/en/)
 - [E-mail](mailto:pandora@plovatto.dev)
 - [GitHub](https://github.com/Plovatto)
 - [LinkedIn](https://www.linkedin.com/in/pandora-becker-lovatto-877169290)
