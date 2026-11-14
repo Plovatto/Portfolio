@@ -9,7 +9,7 @@
     />
     <meta name="theme-color" content="#f6f6fb" media="(prefers-color-scheme: light)" />
     <meta name="theme-color" content="#07061a" media="(prefers-color-scheme: dark)" />
-    <title>Privacidade · Pandora Becker Lovatto</title>
+    <title>Privacidade / Privacy · Pandora Becker Lovatto</title>
     <link rel="icon" type="image/svg+xml" href="favicon.svg" />
     <link rel="canonical" href="https://plovatto.dev/privacidade.html" />
     <script>
@@ -42,6 +42,18 @@
         --signal: #8f73ff;
         --surface: #110e2d;
         color-scheme: dark;
+      }
+
+      @media (prefers-color-scheme: dark) {
+        :root:not([data-theme]) {
+          --bg: #07061a;
+          --text: #f4f1ff;
+          --muted: #aba4d9;
+          --border: rgb(124 92 255 / 0.2);
+          --signal: #8f73ff;
+          --surface: #110e2d;
+          color-scheme: dark;
+        }
       }
 
       * {
@@ -142,8 +154,8 @@
   </head>
   <body>
     <main>
-      <nav aria-label="Navegação / Navigation">
-        <a href="./">← plovatto.dev</a>
+      <nav aria-label="Navegação">
+        <a href="./"><span aria-hidden="true">← </span>plovatto.dev</a>
         <a href="#pt">Português</a>
         <a href="#en" lang="en">English</a>
       </nav>
@@ -167,7 +179,7 @@
           Usa cookies como <code>_ga</code>. Os sinais de publicidade ficam sempre desativados.
         </p>
 
-        <h2>Mapa de calor (Microsoft Clarity)</h2>
+        <h2>Mapas de calor (Microsoft Clarity)</h2>
         <p>
           Também só com o seu aceite, o Microsoft Clarity registra como a página é usada: cliques,
           rolagem, movimento do cursor e uma reprodução da sessão, para gerar mapas de calor. Usa
@@ -178,9 +190,9 @@
         <h2>Consentimento</h2>
         <p>
           Nenhuma dessas ferramentas é carregada antes de você aceitar. A sua escolha fica guardada
-          no seu navegador e pode ser alterada quando quiser no link "Cookies" do rodapé do site. Ao
-          recusar depois de ter aceitado, a medição para e os cookies dessas ferramentas são
-          apagados.
+          no seu navegador e pode ser alterada quando quiser em "Preferências de cookies", no rodapé
+          do site. Ao recusar depois de ter aceitado, a página é recarregada sem essas ferramentas e
+          os cookies que elas criaram neste site são apagados.
         </p>
 
         <h2>Formulário de contato</h2>
@@ -213,8 +225,8 @@
         <h2>Seus direitos</h2>
         <p>
           Pela LGPD, você pode pedir confirmação, acesso, correção ou exclusão dos seus dados e
-          retirar o consentimento a qualquer momento. Para isso, use o
-          <a href="./#contact">formulário de contato</a> do site.
+          retirar o consentimento a qualquer momento. Para isso, use o formulário de contato no fim
+          da <a href="./">página inicial</a>.
         </p>
       </section>
 
@@ -248,8 +260,9 @@
         <h2>Consent</h2>
         <p>
           Neither tool is loaded before you accept. Your choice is stored in your browser and can be
-          changed at any time through the "Cookies" link in the site footer. If you decline after
-          having accepted, measurement stops and the cookies from these tools are deleted.
+          changed at any time through "Cookie settings" in the site footer. If you decline after
+          having accepted, the page reloads without these tools and the cookies they created on this
+          site are deleted.
         </p>
 
         <h2>Contact form</h2>
@@ -281,7 +294,7 @@
         <p>
           Under the LGPD, the Brazilian data protection law, you can ask for confirmation, access,
           correction or deletion of your data and withdraw consent at any time. To do so, use the
-          site's <a href="./#contact">contact form</a>.
+          contact form at the end of the <a href="./">home page</a>.
         </p>
       </section>
     </main>

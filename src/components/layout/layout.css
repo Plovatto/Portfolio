@@ -417,6 +417,14 @@
   animation: consent-in 320ms var(--ease-out) both;
 }
 
+html:has(.consent) {
+  scroll-padding-bottom: 14rem;
+}
+
+html:has(.consent) main {
+  padding-bottom: 12rem;
+}
+
 .consent:focus {
   outline: none;
 }
@@ -435,7 +443,7 @@
 
 .consent a {
   color: var(--text);
-  text-decoration-color: var(--border-strong);
+  text-decoration-color: var(--signal);
   text-underline-offset: 0.25em;
   white-space: nowrap;
 }
@@ -531,6 +539,14 @@
 
   .consent-actions .btn {
     min-height: 2.75rem;
+  }
+
+  html:has(.consent) {
+    scroll-padding-bottom: 20rem;
+  }
+
+  html:has(.consent) main {
+    padding-bottom: 15rem;
   }
 }
 

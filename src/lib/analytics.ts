@@ -28,6 +28,7 @@ export const analyticsEnabled = Boolean(gaId || clarityId)
 
 let loaded = false
 let granted = false
+let reloadPage = () => location.reload()
 
 function gtag(..._args: unknown[]) {
   window.dataLayer?.push(arguments)
@@ -53,7 +54,7 @@ function setClarityConsent(allowed: boolean) {
 
 function clearCookies() {
   const host = location.hostname
-  const domains = ['', host, `.${host}`, `.${host.split('.').slice(-2).join('.')}`]
+  const domains = new Set(['', host, `.${host}`, `.${host.split('.').slice(-2).join('.')}`])
   for (const entry of document.cookie.split(';')) {
     const name = entry.split('=')[0].trim()
     if (!COOKIE_PREFIXES.some((prefix) => name.startsWith(prefix))) continue
@@ -88,25 +89,23 @@ function grant() {
 }
 
 function revoke() {
-  const wasGranted = granted
   granted = false
-  if (!wasGranted) return
   setGaDisabled(true)
   gtag('consent', 'update', { analytics_storage: 'denied' })
   setClarityConsent(false)
   clearCookies()
+  reloadPage()
 }
 
 function apply() {
-  if (getConsent().choice === 'granted') {
-    if (!granted) grant()
-  } else {
-    revoke()
-  }
+  const allowed = getConsent().choice === 'granted'
+  if (allowed && !granted) grant()
+  else if (!allowed && granted) revoke()
 }
 
-export function startAnalytics() {
+export function startAnalytics(reload?: () => void) {
   if (!analyticsEnabled) return
+  if (reload) reloadPage = reload
   if (gaId) {
     window.dataLayer ??= []
     window.gtag = gtag
@@ -117,6 +116,7 @@ export function startAnalytics() {
       analytics_storage: 'denied',
     })
   }
+  if (getConsent().choice === 'denied') clearCookies()
   apply()
   subscribeConsent(apply)
 }

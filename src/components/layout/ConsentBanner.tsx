@@ -8,30 +8,36 @@ import { privacyUrl } from '../../lib/privacy'
 
 export function ConsentBanner() {
   const { t } = useTranslation()
-  const { choice, asking } = useConsent()
+  const { asking, requests } = useConsent()
   const ref = useRef<HTMLElement>(null)
   const returnTo = useRef<HTMLElement | null>(null)
-  const reopened = asking && choice !== null
 
   useEffect(() => {
-    if (!reopened) return
-    returnTo.current = document.activeElement instanceof HTMLElement ? document.activeElement : null
-    ref.current?.focus()
-  }, [reopened])
+    const banner = ref.current
+    if (!banner || requests === 0) return
+    const focused = document.activeElement
+    if (focused instanceof HTMLElement && focused !== document.body && !banner.contains(focused)) {
+      returnTo.current = focused
+    }
+    banner.focus()
+  }, [requests])
 
   if (!analyticsEnabled || !asking) return null
 
   const decide = (next: ConsentChoice) => {
-    decideConsent(next)
-    if (returnTo.current?.isConnected) returnTo.current.focus()
+    const target = returnTo.current?.isConnected
+      ? returnTo.current
+      : document.getElementById('main')
     returnTo.current = null
+    decideConsent(next)
+    target?.focus({ preventScroll: true })
   }
 
   return (
     <section ref={ref} className="consent" aria-labelledby="consent-title" tabIndex={-1}>
-      <h2 id="consent-title" className="consent-title">
+      <p id="consent-title" className="consent-title">
         {t('consent.title')}
-      </h2>
+      </p>
       <p>
         {t('consent.text')} <a href={privacyUrl()}>{t('consent.privacy')}</a>
       </p>

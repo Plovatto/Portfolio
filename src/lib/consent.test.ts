@@ -19,7 +19,7 @@ describe('consent', () => {
   it('asks on the first visit, with nothing decided', async () => {
     const consent = await load()
 
-    expect(consent.getConsent()).toEqual({ choice: null, asking: true })
+    expect(consent.getConsent()).toMatchObject({ choice: null, asking: true })
   })
 
   it('remembers an accepted choice across visits and stops asking', async () => {
@@ -27,10 +27,10 @@ describe('consent', () => {
     first.decideConsent('granted')
 
     expect(localStorage.getItem(KEY)).toBe('granted')
-    expect(first.getConsent()).toEqual({ choice: 'granted', asking: false })
+    expect(first.getConsent()).toMatchObject({ choice: 'granted', asking: false })
 
     const second = await load()
-    expect(second.getConsent()).toEqual({ choice: 'granted', asking: false })
+    expect(second.getConsent()).toMatchObject({ choice: 'granted', asking: false })
   })
 
   it('remembers a refusal just as firmly', async () => {
@@ -38,14 +38,14 @@ describe('consent', () => {
     first.decideConsent('denied')
 
     const second = await load()
-    expect(second.getConsent()).toEqual({ choice: 'denied', asking: false })
+    expect(second.getConsent()).toMatchObject({ choice: 'denied', asking: false })
   })
 
   it('treats an unknown stored value as no decision', async () => {
     localStorage.setItem(KEY, 'yes please')
     const consent = await load()
 
-    expect(consent.getConsent()).toEqual({ choice: null, asking: true })
+    expect(consent.getConsent()).toMatchObject({ choice: null, asking: true })
   })
 
   it('asks again on request while keeping the current choice until a new one is made', async () => {
@@ -53,10 +53,10 @@ describe('consent', () => {
     consent.decideConsent('granted')
     consent.reopenConsent()
 
-    expect(consent.getConsent()).toEqual({ choice: 'granted', asking: true })
+    expect(consent.getConsent()).toMatchObject({ choice: 'granted', asking: true })
 
     consent.decideConsent('denied')
-    expect(consent.getConsent()).toEqual({ choice: 'denied', asking: false })
+    expect(consent.getConsent()).toMatchObject({ choice: 'denied', asking: false })
     expect(localStorage.getItem(KEY)).toBe('denied')
   })
 
@@ -74,6 +74,34 @@ describe('consent', () => {
     expect(listener).toHaveBeenCalledTimes(2)
   })
 
+  it('counts every request to ask again, even while already asking', async () => {
+    const consent = await load()
+    expect(consent.getConsent().requests).toBe(0)
+
+    consent.reopenConsent()
+    consent.reopenConsent()
+
+    expect(consent.getConsent()).toMatchObject({ choice: null, asking: true, requests: 2 })
+  })
+
+  it('picks up a choice made in another tab', async () => {
+    const consent = await load()
+    const listener = vi.fn()
+    consent.subscribeConsent(listener)
+    expect(consent.getConsent().choice).toBeNull()
+
+    localStorage.setItem(KEY, 'denied')
+    window.dispatchEvent(new StorageEvent('storage', { key: KEY }))
+    expect(consent.getConsent()).toMatchObject({ choice: 'denied', asking: false })
+
+    window.dispatchEvent(new StorageEvent('storage', { key: 'portfolio-theme' }))
+    expect(listener).toHaveBeenCalledTimes(1)
+
+    localStorage.clear()
+    window.dispatchEvent(new StorageEvent('storage', { key: null }))
+    expect(consent.getConsent()).toMatchObject({ choice: null, asking: true })
+  })
+
   it('keeps the same snapshot object while nothing changes', async () => {
     const consent = await load()
 
@@ -89,8 +117,8 @@ describe('consent', () => {
     })
     const consent = await load()
 
-    expect(consent.getConsent()).toEqual({ choice: null, asking: true })
+    expect(consent.getConsent()).toMatchObject({ choice: null, asking: true })
     expect(() => consent.decideConsent('granted')).not.toThrow()
-    expect(consent.getConsent()).toEqual({ choice: 'granted', asking: false })
+    expect(consent.getConsent()).toMatchObject({ choice: 'granted', asking: false })
   })
 })
