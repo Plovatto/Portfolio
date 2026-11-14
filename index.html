@@ -7,31 +7,31 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <meta
       name="description"
-      content="Pandora Lovatto, desenvolvedora full stack. Sistemas web reais, da interface ao banco de dados."
+      content="Pandora Becker Lovatto, desenvolvedora full stack. Sistemas web reais, da interface ao banco de dados, com React, Node.js, TypeScript e MySQL."
     />
     <meta name="theme-color" content="#f6f6fb" media="(prefers-color-scheme: light)" />
     <meta name="theme-color" content="#07061a" media="(prefers-color-scheme: dark)" />
     <meta name="author" content="Pandora Becker Lovatto" />
-    <link rel="canonical" href="https://plovatto.github.io/Portfolio/" />
+    <link rel="canonical" href="https://plovatto.dev/" />
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="pt_BR" />
     <meta property="og:locale:alternate" content="en_US" />
-    <meta property="og:site_name" content="Pandora Lovatto" />
-    <meta property="og:title" content="Pandora Lovatto · Desenvolvedora full stack" />
+    <meta property="og:site_name" content="Pandora Becker Lovatto" />
+    <meta property="og:title" content="Pandora Becker Lovatto · Desenvolvedora full stack" />
     <meta
       property="og:description"
       content="Sistemas web reais, da interface ao banco de dados. React, Node.js, TypeScript e MySQL."
     />
-    <meta property="og:url" content="https://plovatto.github.io/Portfolio/" />
-    <meta property="og:image" content="https://plovatto.github.io/Portfolio/og.jpg" />
+    <meta property="og:url" content="https://plovatto.dev/" />
+    <meta property="og:image" content="https://plovatto.dev/og.jpg" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
     <meta
       property="og:image:alt"
-      content="Portfólio de Pandora Lovatto em forma de placa de circuito"
+      content="Portfólio de Pandora Becker Lovatto em forma de placa de circuito"
     />
     <meta name="twitter:card" content="summary_large_image" />
-    <title>Pandora Lovatto · Desenvolvedora full stack</title>
+    <title>Pandora Becker Lovatto · Desenvolvedora full stack</title>
     <script>
       try {
         const stored = localStorage.getItem('portfolio-theme')
@@ -46,16 +46,40 @@
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
-        "@type": "Person",
-        "name": "Pandora Becker Lovatto",
-        "alternateName": "Pandora Lovatto",
-        "jobTitle": "Desenvolvedora full stack",
-        "url": "https://plovatto.github.io/Portfolio/",
-        "image": "https://plovatto.github.io/Portfolio/og.jpg",
-        "knowsAbout": ["React", "JavaScript", "TypeScript", "Node.js", "Express", "MySQL", "SQL"],
-        "sameAs": [
-          "https://github.com/Plovatto",
-          "https://www.linkedin.com/in/pandora-becker-lovatto-877169290"
+        "@graph": [
+          {
+            "@type": "Person",
+            "@id": "https://plovatto.dev/#person",
+            "name": "Pandora Becker Lovatto",
+            "alternateName": "Pandora Lovatto",
+            "jobTitle": "Desenvolvedora full stack",
+            "url": "https://plovatto.dev/",
+            "image": "https://plovatto.dev/og.jpg",
+            "knowsAbout": [
+              "React",
+              "JavaScript",
+              "TypeScript",
+              "Node.js",
+              "Express",
+              "MySQL",
+              "SQL"
+            ],
+            "sameAs": [
+              "https://github.com/Plovatto",
+              "https://www.linkedin.com/in/pandora-becker-lovatto-877169290"
+            ]
+          },
+          {
+            "@type": "WebSite",
+            "@id": "https://plovatto.dev/#website",
+            "url": "https://plovatto.dev/",
+            "name": "Pandora Becker Lovatto",
+            "alternateName": "Pandora Lovatto",
+            "description": "Portfólio de Pandora Becker Lovatto, desenvolvedora full stack.",
+            "inLanguage": ["pt-BR", "en"],
+            "author": { "@id": "https://plovatto.dev/#person" },
+            "publisher": { "@id": "https://plovatto.dev/#person" }
+          }
         ]
       }
     </script>

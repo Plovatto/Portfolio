@@ -1,0 +1,25 @@
+# Pandora Becker Lovatto
+
+> Portfólio de Pandora Becker Lovatto, desenvolvedora full stack no Brasil. Constrói e evolui sistemas web reais, da interface ao banco de dados, com React, Node.js, TypeScript e MySQL. Site em português e inglês.
+
+Pandora Becker Lovatto is a full stack developer based in Brazil, working as a contractor at CONSEPRO Taquara on the city's on-street parking system and studying Information Systems at FACCAT.
+
+## Stack
+
+- Interface: React, JavaScript, TypeScript, HTML, CSS
+- Server: Node.js, Express
+- Data: MySQL, SQL
+- Infra: deploy, Git, GitHub
+
+## Projects
+
+- [SparkChat](https://github.com/Plovatto/SparkChat): real-time chat with end-to-end encryption in the browser, rooms, groups, voice messages, link previews and an AI assistant. React, TypeScript, libsodium, Socket.IO, Node.js, Express, Turso, Cloudflare R2.
+- [PetLand](https://github.com/Plovatto/PetLand): landing page for a fictional pet shop built as an interaction showcase, in Portuguese and English. React, TypeScript, Tailwind, Motion, i18next, EmailJS.
+- [Portfolio](https://github.com/Plovatto/Portfolio): this site, a living circuit board inside a code editor interface. React, TypeScript, Vite, Cloudflare Workers.
+
+## Links
+
+- [Site](https://plovatto.dev/)
+- [GitHub](https://github.com/Plovatto)
+- [LinkedIn](https://www.linkedin.com/in/pandora-becker-lovatto-877169290)
+- [Résumé (PDF)](https://plovatto.dev/pandora-becker-lovatto-curriculo.pdf)

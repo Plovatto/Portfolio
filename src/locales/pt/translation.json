@@ -1,7 +1,7 @@
 {
   "meta": {
-    "title": "Pandora Lovatto · Desenvolvedora full stack",
-    "description": "Pandora Lovatto, desenvolvedora full stack. Sistemas web reais, da interface ao banco de dados.",
+    "title": "Pandora Becker Lovatto · Desenvolvedora full stack",
+    "description": "Pandora Becker Lovatto, desenvolvedora full stack. Sistemas web reais, da interface ao banco de dados, com React, Node.js, TypeScript e MySQL.",
     "away": "● alterações não salvas · Pandora Lovatto"
   },
   "nav": {
@@ -304,7 +304,17 @@
     }
   },
   "footer": {
-    "copyright": "© {{year}} Pandora Becker Lovatto"
+    "copyright": "© {{year}} Pandora Becker Lovatto",
+    "label": "Rodapé",
+    "privacy": "Privacidade",
+    "cookies": "Preferências de cookies"
+  },
+  "consent": {
+    "title": "Cookies",
+    "text": "Com a sua permissão, uso o Google Analytics e o Microsoft Clarity para entender como o site é usado. Nada é carregado se você recusar.",
+    "privacy": "Política de privacidade",
+    "accept": "Aceitar",
+    "decline": "Recusar"
   },
   "window": {
     "close": "fechar"

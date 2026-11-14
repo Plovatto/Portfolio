@@ -11,10 +11,12 @@ import './i18n'
 import './styles/index.css'
 import App from './App.tsx'
 import { ThemeProvider } from './context/ThemeContext'
+import { startAnalytics } from './lib/analytics'
 import { lockIntroScroll } from './lib/introLock'
 
 document.documentElement.classList.add('reveal')
 lockIntroScroll()
+startAnalytics()
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>

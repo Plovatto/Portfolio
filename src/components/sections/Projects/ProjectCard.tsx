@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { isSplitTechs } from '../../../constants/projects'
 import type { Project } from '../../../constants/projects'
 import { useReveal } from '../../../hooks/useReveal'
+import { track } from '../../../lib/analytics'
 import { Chip } from '../../ui/Chip'
 import { ProjectPreview } from './ProjectPreview'
 import { XRay } from './XRay'
@@ -69,7 +70,13 @@ export function ProjectCard({ project }: { project: Project }) {
           {t('projects.run')}
         </button>
         {project.links.map((link) => (
-          <a key={link.href} href={link.href}>
+          <a
+            key={link.href}
+            href={link.href}
+            onClick={() =>
+              track('project_link_click', { project: project.id, link_type: link.label })
+            }
+          >
             {t(key(`links.${link.label}`))}
           </a>
         ))}
