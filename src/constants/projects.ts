@@ -49,13 +49,13 @@ export const PROJECTS: readonly Project[] = [
     name: 'SparkChat',
     refdes: 'U2',
     image: { name: 'sparkchat', width: 1280, height: 641 },
-    preview: 'https://plovatto.github.io/SparkChat/',
+    preview: 'https://sparkchat.plovatto.dev/',
     techs: {
       client: ['React', 'TypeScript', 'libsodium', 'Socket.IO', 'Vite'],
       server: ['Node.js', 'Express', 'Turso', 'Cloudflare R2', 'Gemini'],
     },
     links: [
-      { label: 'app', href: 'https://plovatto.github.io/SparkChat/' },
+      { label: 'app', href: 'https://sparkchat.plovatto.dev/' },
       { label: 'client', href: 'https://github.com/Plovatto/SparkChat' },
       { label: 'api', href: 'https://github.com/Plovatto/API-SparkChat' },
     ],
