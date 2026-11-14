@@ -146,7 +146,7 @@ src/
 ├─ i18n.ts
 ├─ App.tsx
 └─ main.tsx
-public/                    # icons, résumé, project images, social preview, sitemap, 404
+public/                    # icons, résumé, project images, social preview, sitemap, robots, llms.txt, 404
 worker/                    # Cloudflare Worker that delivers the contact e-mail
 docs/screenshots/          # images used in this README
 ```
