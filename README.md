@@ -10,7 +10,7 @@
 
 Personal portfolio of Pandora Becker Lovatto, full stack developer. The page is a living circuit board built with React, TypeScript and Vite: every section is mounted as a chip on a procedurally routed PCB, inside an interface that looks and behaves like a code editor.
 
-**Live site:** https://plovatto.github.io/Portfolio/
+**Live site:** https://plovatto.dev/
 
 <p align="center">
   <img src="docs/screenshots/hero.webp" alt="Hero with the copper nameplate, the interactive terminal and the circuit board background" width="900">
@@ -163,14 +163,14 @@ The site is published to GitHub Pages and the contact Worker to Cloudflare, both
 | `deploy-worker.yml` | pushes to `main` that touch `worker/` | typecheck, tests and `wrangler deploy`                                         |
 | `scorecard.yml`     | pushes to `main` and weekly           | OpenSSF Scorecard security analysis                                            |
 
-Production builds use the `/Portfolio/` base path; override it with `VITE_BASE`.
+The site is served from the root of `plovatto.dev`, so the deploy workflow builds with `VITE_BASE=/`. Without it, production builds fall back to the `/Portfolio/` base path.
 
 One-time setup in the repository settings:
 
 1. **Pages → Source:** GitHub Actions.
 2. **Secrets and variables → Actions → Variables:** `VITE_CONTACT_ENDPOINT` and `VITE_TURNSTILE_SITE_KEY`. Both end up in the public bundle, so they are variables, not secrets.
 3. **Secrets:** `CLOUDFLARE_API_TOKEN` (template "Edit Cloudflare Workers") and `CLOUDFLARE_ACCOUNT_ID`, used only by the worker deploy. The worker's own secrets (`CONTACT_TO`, `RESEND_API_KEY`, `TURNSTILE_SECRET`) stay in Cloudflare.
-4. **Cloudflare Turnstile:** add `plovatto.github.io` to the widget hostnames.
+4. **Cloudflare Turnstile:** add `plovatto.dev` to the widget hostnames.
 
 ## Contributing
 

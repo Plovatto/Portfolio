@@ -3,7 +3,7 @@ import { handleRequest } from './contact'
 import type { Env } from './contact'
 
 const env: Env = {
-  ALLOWED_ORIGINS: 'https://plovatto.github.io,http://localhost:5173',
+  ALLOWED_ORIGINS: 'https://plovatto.dev,https://plovatto.github.io,http://localhost:5173',
   CONTACT_TO: 'owner@example.com',
   RESEND_API_KEY: 're_test',
   TURNSTILE_SECRET: 'turnstile-secret',
@@ -62,6 +62,9 @@ describe('contact worker', () => {
       })
 
     expect((await handleRequest(preflight(ORIGIN), env, upstream())).status).toBe(204)
+    expect((await handleRequest(preflight('https://plovatto.dev'), env, upstream())).status).toBe(
+      204,
+    )
     expect((await handleRequest(preflight('https://evil.example'), env, upstream())).status).toBe(
       403,
     )
