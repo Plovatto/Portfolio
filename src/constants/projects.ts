@@ -83,12 +83,12 @@ export const PROJECTS: readonly Project[] = [
     name: 'PetLand',
     refdes: 'U3',
     image: { name: 'petland', width: 1280, height: 800 },
-    preview: 'https://plovatto.github.io/PetLand/',
+    preview: 'https://petland.plovatto.dev/',
     flip: true,
     cropImage: true,
     techs: ['React', 'TypeScript', 'Tailwind', 'Motion', 'i18next', 'EmailJS'],
     links: [
-      { label: 'site', href: 'https://plovatto.github.io/PetLand/' },
+      { label: 'site', href: 'https://petland.plovatto.dev/' },
       { label: 'code', href: 'https://github.com/Plovatto/PetLand' },
     ],
     schematic: {
