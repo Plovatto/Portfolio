@@ -4,6 +4,7 @@ import type { Plugin } from 'vite'
 import { PROFILE } from '../src/constants/profile.ts'
 import { PROJECTS } from '../src/constants/projects.ts'
 import type { Project } from '../src/constants/projects.ts'
+import { LANGUAGE_STORAGE_KEY } from '../src/lib/languageStorage.ts'
 
 export const SITE_URL = 'https://plovatto.dev'
 const SHARE_IMAGE = `${SITE_URL}/og.jpg`
@@ -112,7 +113,37 @@ export function structuredData(language: PageLanguage, t: Translation) {
   }
 }
 
-export function renderHead(language: PageLanguage, t: Translation): string {
+export const CRAWLERS =
+  /bot|crawl|spider|slurp|inspectiontool|lighthouse|facebookexternalhit|whatsapp|preview/i
+
+export function languageRedirectScript(base: string): string {
+  return `(() => {
+      try {
+        if (${CRAWLERS}.test(navigator.userAgent)) return
+        const base = ${JSON.stringify(base)}
+        let wanted = null
+        try {
+          wanted = localStorage.getItem(${JSON.stringify(LANGUAGE_STORAGE_KEY)})
+        } catch {}
+        if (wanted !== 'pt' && wanted !== 'en') {
+          const preferred = navigator.languages?.length ? navigator.languages : [navigator.language]
+          wanted =
+            preferred
+              .map((tag) => String(tag).slice(0, 2).toLowerCase())
+              .find((code) => code === 'pt' || code === 'en') ?? 'en'
+        }
+        const rest = location.pathname.startsWith(base)
+          ? location.pathname.slice(base.length)
+          : location.pathname.slice(1)
+        const current = rest === 'en' || rest.startsWith('en/') ? 'en' : 'pt'
+        if (wanted !== current) {
+          location.replace(base + (wanted === 'en' ? 'en/' : '') + location.search + location.hash)
+        }
+      } catch {}
+    })()`
+}
+
+export function renderHead(language: PageLanguage, t: Translation, base = '/'): string {
   const other: PageLanguage = language === 'pt' ? 'en' : 'pt'
   const url = pageUrl(language)
   const meta = (attribute: 'name' | 'property', key: string, value: string) =>
@@ -120,6 +151,7 @@ export function renderHead(language: PageLanguage, t: Translation): string {
   const jsonLd = JSON.stringify(structuredData(language, t)).replaceAll('<', '\\u003c')
 
   return [
+    `<script>${languageRedirectScript(base)}</script>`,
     meta('name', 'description', t.meta.description),
     `<link rel="canonical" href="${url}" />`,
     `<link rel="alternate" hreflang="${PAGES.pt.htmlLang}" href="${pageUrl('pt')}" />`,
@@ -165,7 +197,12 @@ export function renderNoscript(t: Translation): string {
   ].join('\n    ')
 }
 
-export function renderPage(html: string, language: PageLanguage, t: Translation): string {
+export function renderPage(
+  html: string,
+  language: PageLanguage,
+  t: Translation,
+  base = '/',
+): string {
   for (const marker of [HEAD_MARKER, NOSCRIPT_MARKER]) {
     if (!html.includes(marker)) throw new Error(`index.html is missing ${marker}`)
   }
@@ -173,13 +210,14 @@ export function renderPage(html: string, language: PageLanguage, t: Translation)
 
   return html
     .replace(HTML_TAG, `<html lang="${PAGES[language].htmlLang}">`)
-    .replace(HEAD_MARKER, () => renderHead(language, t))
+    .replace(HEAD_MARKER, () => renderHead(language, t, base))
     .replace(NOSCRIPT_MARKER, () => renderNoscript(t))
 }
 
 export function seoPages(): Plugin {
   let root = process.cwd()
   let outDir = 'dist'
+  let base = '/'
   let english: string | undefined
   const translation = (language: PageLanguage): Translation =>
     JSON.parse(readFileSync(join(root, 'src/locales', language, 'translation.json'), 'utf8'))
@@ -188,13 +226,14 @@ export function seoPages(): Plugin {
     name: 'seo-pages',
     configResolved(config) {
       root = config.root
+      base = config.base
       outDir = resolve(config.root, config.build.outDir)
     },
     transformIndexHtml: {
       order: 'post',
       handler(html, context) {
-        if (!context.server) english = renderPage(html, 'en', translation('en'))
-        return renderPage(html, 'pt', translation('pt'))
+        if (!context.server) english = renderPage(html, 'en', translation('en'), base)
+        return renderPage(html, 'pt', translation('pt'), base)
       },
     },
     writeBundle() {

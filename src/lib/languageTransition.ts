@@ -1,6 +1,7 @@
 import i18n from '../i18n'
 import type { Language } from '../i18n'
 import { prefersReducedMotion } from '../hooks/useReducedMotion'
+import { LANGUAGE_STORAGE_KEY } from './languageStorage'
 import { cancelScramble, scrambleNodes } from './scramble'
 import type { ScrambleTarget } from './scramble'
 
@@ -40,6 +41,9 @@ function visibleTextNodes() {
 
 export async function switchLanguage(language: Language) {
   cancelScramble()
+  try {
+    localStorage.setItem(LANGUAGE_STORAGE_KEY, language)
+  } catch {}
   const reduced = prefersReducedMotion()
   const before = reduced ? null : new Map(visibleTextNodes().map(({ node }) => [node, node.data]))
 

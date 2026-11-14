@@ -1,7 +1,7 @@
 /// <reference lib="dom" />
 import { readFileSync } from 'node:fs'
 import { describe, expect, it } from 'vitest'
-import { renderPage, structuredData } from './pages.ts'
+import { languageRedirectScript, renderPage, structuredData } from './pages.ts'
 import type { PageLanguage, Translation } from './pages.ts'
 
 const template = readFileSync('index.html', 'utf8')
@@ -91,6 +91,81 @@ describe('renderPage', () => {
     expect(() =>
       renderPage('<html lang="pt-BR"><head></head></html>', 'pt', translation('pt')),
     ).toThrow(/seo:head/)
+  })
+})
+
+describe('languageRedirectScript', () => {
+  const CHROME =
+    'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/140.0 Safari/537.36'
+
+  function visit(
+    pathname: string,
+    {
+      languages = ['en-US'],
+      userAgent = CHROME,
+      stored = null as string | null,
+      base = '/',
+      search = '',
+      hash = '',
+    } = {},
+  ) {
+    let target: string | null = null
+    const run = new Function('navigator', 'localStorage', 'location', languageRedirectScript(base))
+    run(
+      { userAgent, languages, language: languages[0] },
+      { getItem: () => stored },
+      { pathname, search, hash, replace: (url: string) => (target = url) },
+    )
+    return target
+  }
+
+  it('sends English systems from the root to /en/', () => {
+    expect(visit('/', { languages: ['en-US', 'en'] })).toBe('/en/')
+  })
+
+  it('sends Portuguese systems from /en/ to the root', () => {
+    expect(visit('/en/', { languages: ['pt-BR', 'pt'] })).toBe('/')
+  })
+
+  it('stays put when the page already matches the system language', () => {
+    expect(visit('/', { languages: ['pt-BR'] })).toBeNull()
+    expect(visit('/en/', { languages: ['en-GB'] })).toBeNull()
+  })
+
+  it('uses the first supported language and falls back to English', () => {
+    expect(visit('/en/', { languages: ['es-ES', 'pt-PT', 'en'] })).toBe('/')
+    expect(visit('/', { languages: ['de-DE', 'fr'] })).toBe('/en/')
+  })
+
+  it('respects a language the visitor picked on the switch', () => {
+    expect(visit('/', { languages: ['en-US'], stored: 'pt' })).toBeNull()
+    expect(visit('/', { languages: ['pt-BR'], stored: 'en' })).toBe('/en/')
+  })
+
+  it('never redirects search engines or link previews', () => {
+    for (const userAgent of [
+      'Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)',
+      'Mozilla/5.0 AppleWebKit/537.36 (KHTML, like Gecko; compatible; Google-InspectionTool/1.0;)',
+      'Mozilla/5.0 (compatible; bingbot/2.0; +http://www.bing.com/bingbot.htm)',
+      'LinkedInBot/1.0 (compatible; Mozilla/5.0)',
+      'WhatsApp/2.23.20.0',
+      'Mozilla/5.0 (Linux; Android 11) Chrome-Lighthouse',
+    ]) {
+      expect(visit('/', { languages: ['en-US'], userAgent })).toBeNull()
+    }
+  })
+
+  it('keeps the query string and hash, and respects a base path', () => {
+    expect(visit('/', { search: '?utm=cv', hash: '#projetos' })).toBe('/en/?utm=cv#projetos')
+    expect(visit('/Portfolio/', { base: '/Portfolio/' })).toBe('/Portfolio/en/')
+  })
+
+  it('runs first in the head of both pages', () => {
+    for (const language of ['pt', 'en'] as const) {
+      const { doc } = parse(language)
+      const first = doc.querySelector('meta[name="author"] ~ script')
+      expect(first?.textContent).toContain('location.replace')
+    }
   })
 })
 
