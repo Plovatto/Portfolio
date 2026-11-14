@@ -2,6 +2,9 @@
   "meta": {
     "title": "Pandora Becker Lovatto · Full stack developer",
     "description": "Pandora Becker Lovatto, full stack developer. Real web systems, from the interface to the database, with React, Node.js, TypeScript and MySQL.",
+    "shareDescription": "Real web systems, from the interface to the database. React, Node.js, TypeScript and MySQL.",
+    "shareImageAlt": "Pandora Becker Lovatto's portfolio drawn as a circuit board",
+    "siteDescription": "Portfolio of Pandora Becker Lovatto, full stack developer.",
     "away": "● unsaved changes · Pandora Lovatto"
   },
   "nav": {

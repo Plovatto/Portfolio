@@ -88,7 +88,8 @@ export function Nameplate({ powered, svgRef }: NameplateProps) {
 
   return (
     <h1 ref={plateRef} className="nameplate" data-chip="N1" data-bare="" data-pins="tb">
-      <svg ref={svgRef} className="name-art" role="img" aria-label={PROFILE.name} />
+      <span className="visually-hidden">{PROFILE.fullName}</span>
+      <svg ref={svgRef} className="name-art" aria-hidden="true" />
     </h1>
   )
 }
