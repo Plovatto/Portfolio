@@ -161,6 +161,8 @@ Cada pull request passa pelas mesmas etapas antes de ir ao ar.
 - O [`ci.yml`](.github/workflows/ci.yml) verifica formatação, lint, tipos e build do site, e os tipos do worker, em cada push e pull request para a `main`.
 - O [`tests.yml`](.github/workflows/tests.yml) roda os testes unitários do site e do worker.
 - O [CodeQL](https://github.com/Plovatto/Portfolio/security/code-scanning) analisa o código, e o [OpenSSF Scorecard](https://scorecard.dev/viewer/?uri=github.com/Plovatto/Portfolio) roda toda semana.
+- O [Lighthouse CI](.github/workflows/lighthouse.yml) audita `/` e `/en/` em cada pull request e falha se acessibilidade, boas práticas ou SEO ficarem abaixo de 95.
+- Os títulos dos pull requests são conferidos no mesmo formato gitmoji e Conventional Commits dos commits.
 - O Dependabot agrupa as atualizações do npm toda semana e as das GitHub Actions todo mês.
 - Todas as actions dos workflows são fixadas por hash de commit.
 
@@ -168,7 +170,7 @@ Cada pull request passa pelas mesmas etapas antes de ir ao ar.
 
 ## Como executar
 
-Requer [Node.js](https://nodejs.org/) 22.12 ou mais recente e npm.
+Requer [Node.js](https://nodejs.org/) 22.12 ou mais recente (veja o [`.nvmrc`](.nvmrc)) e npm.
 
 1. Clone o repositório e instale as dependências:
 
@@ -202,16 +204,17 @@ Requer [Node.js](https://nodejs.org/) 22.12 ou mais recente e npm.
 
 ## Scripts
 
-| Comando                | Descrição                                 |
-| :--------------------- | :---------------------------------------- |
-| `npm run dev`          | Inicia o servidor de desenvolvimento      |
-| `npm run build`        | Checa os tipos e gera o build de produção |
-| `npm run preview`      | Serve o build de produção localmente      |
-| `npm run lint`         | Roda o oxlint                             |
-| `npm run typecheck`    | Checa os tipos do projeto                 |
-| `npm test`             | Roda os testes unitários                  |
-| `npm run format`       | Formata o código com Prettier             |
-| `npm run format:check` | Verifica a formatação                     |
+| Comando                | Descrição                                      |
+| :--------------------- | :--------------------------------------------- |
+| `npm run dev`          | Inicia o servidor de desenvolvimento           |
+| `npm run build`        | Checa os tipos e gera o build de produção      |
+| `npm run preview`      | Serve o build de produção localmente           |
+| `npm run lint`         | Roda o oxlint                                  |
+| `npm run typecheck`    | Checa os tipos do projeto                      |
+| `npm test`             | Roda os testes unitários                       |
+| `npm run format`       | Formata o código com Prettier                  |
+| `npm run format:check` | Verifica a formatação                          |
+| `npm run lighthouse`   | Roda o Lighthouse CI sobre o build de produção |
 
 ## Estrutura do projeto
 
@@ -277,7 +280,7 @@ Não abra issues públicas para vulnerabilidades. Reporte de forma privada, como
 
 ## Histórico de versões
 
-As mudanças de cada versão estão na [página de releases](https://github.com/Plovatto/Portfolio/releases).
+As mudanças de cada versão estão no [CHANGELOG](CHANGELOG.md) (em inglês) e na [página de releases](https://github.com/Plovatto/Portfolio/releases).
 
 ## Autoria
 
