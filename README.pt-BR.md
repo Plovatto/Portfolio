@@ -269,7 +269,7 @@ Configuração única nas settings do repositório:
 
 ## Contribuição
 
-Issues e pull requests são bem-vindos. Leia o [guia de contribuição](CONTRIBUTING.md) (em inglês) para as convenções de branch, commit e pull request.
+Issues e pull requests são bem-vindos. Leia o [guia de contribuição](CONTRIBUTING.md) para as convenções de branch, commit e pull request, e siga o [código de conduta](CODE_OF_CONDUCT.md). Ambos estão em inglês.
 
 ## Segurança
 

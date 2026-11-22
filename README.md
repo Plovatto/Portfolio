@@ -269,7 +269,7 @@ One-time setup in the repository settings:
 
 ## Contributing
 
-Issues and pull requests are welcome. Read the [contributing guide](CONTRIBUTING.md) for the branch, commit, and pull request conventions.
+Issues and pull requests are welcome. Read the [contributing guide](CONTRIBUTING.md) for the branch, commit, and pull request conventions, and follow the [code of conduct](CODE_OF_CONDUCT.md).
 
 ## Security
 
