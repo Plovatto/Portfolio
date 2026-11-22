@@ -24,3 +24,5 @@ dist-ssr
 worker/node_modules
 worker/.dev.vars
 worker/.wrangler
+
+.lighthouseci
