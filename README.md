@@ -161,6 +161,8 @@ Every pull request goes through the same steps before it goes live.
 - [`ci.yml`](.github/workflows/ci.yml) checks formatting, lint, types, and the build for the site, and types for the worker, on every push and pull request to `main`.
 - [`tests.yml`](.github/workflows/tests.yml) runs the unit tests for the site and the worker.
 - [CodeQL](https://github.com/Plovatto/Portfolio/security/code-scanning) scans the code, and the [OpenSSF Scorecard](https://scorecard.dev/viewer/?uri=github.com/Plovatto/Portfolio) runs every week.
+- [Lighthouse CI](.github/workflows/lighthouse.yml) audits `/` and `/en/` on every pull request and fails if accessibility, best practices, or SEO drop below 95.
+- Pull request titles are checked against the same gitmoji and Conventional Commits format as the commits.
 - Dependabot groups npm updates weekly and GitHub Actions updates monthly.
 - Every action in the workflows is pinned to a commit hash.
 
@@ -168,7 +170,7 @@ Every pull request goes through the same steps before it goes live.
 
 ## Getting started
 
-Requires [Node.js](https://nodejs.org/) 22.12 or newer and npm.
+Requires [Node.js](https://nodejs.org/) 22.12 or newer (see [`.nvmrc`](.nvmrc)) and npm.
 
 1. Clone the repository and install the dependencies:
 
@@ -202,16 +204,17 @@ Requires [Node.js](https://nodejs.org/) 22.12 or newer and npm.
 
 ## Scripts
 
-| Command                | Description                           |
-| :--------------------- | :------------------------------------ |
-| `npm run dev`          | Starts the development server         |
-| `npm run build`        | Type-checks and builds for production |
-| `npm run preview`      | Serves the production build locally   |
-| `npm run lint`         | Runs oxlint                           |
-| `npm run typecheck`    | Type-checks the project               |
-| `npm test`             | Runs the unit tests                   |
-| `npm run format`       | Formats the code with Prettier        |
-| `npm run format:check` | Checks the formatting                 |
+| Command                | Description                                |
+| :--------------------- | :----------------------------------------- |
+| `npm run dev`          | Starts the development server              |
+| `npm run build`        | Type-checks and builds for production      |
+| `npm run preview`      | Serves the production build locally        |
+| `npm run lint`         | Runs oxlint                                |
+| `npm run typecheck`    | Type-checks the project                    |
+| `npm test`             | Runs the unit tests                        |
+| `npm run format`       | Formats the code with Prettier             |
+| `npm run format:check` | Checks the formatting                      |
+| `npm run lighthouse`   | Runs Lighthouse CI on the production build |
 
 ## Project structure
 
@@ -269,7 +272,7 @@ One-time setup in the repository settings:
 
 ## Contributing
 
-Issues and pull requests are welcome. Read the [contributing guide](CONTRIBUTING.md) for the branch, commit, and pull request conventions.
+Issues and pull requests are welcome. Read the [contributing guide](CONTRIBUTING.md) for the branch, commit, and pull request conventions, and follow the [code of conduct](CODE_OF_CONDUCT.md).
 
 ## Security
 
@@ -277,7 +280,7 @@ Please do not open public issues for vulnerabilities. Report them privately as d
 
 ## Changelog
 
-Notable changes for each release are listed on the [releases page](https://github.com/Plovatto/Portfolio/releases).
+Notable changes for each release are listed in the [CHANGELOG](CHANGELOG.md) and on the [releases page](https://github.com/Plovatto/Portfolio/releases).
 
 ## Author
 
